@@ -26,5 +26,10 @@ export const LOCATION_FRAGMENT = gql`
     userId
     lat
     lon
+    user {
+      id
+      username
+      sex
+    }
   }
 `;

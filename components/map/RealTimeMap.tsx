@@ -14,6 +14,7 @@ import {
   Location,
   SelectLocationsQuery,
   UpdateLocationMutation,
+  User,
   useSelectLocationsQuery,
   useUpdateLocationMutation,
 } from '../../generated/graphql.ts';
@@ -28,6 +29,7 @@ import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 interface RealTimeMapProps {
   initialLatitude: number;
   initialLongitude: number;
+  setCurrentUsers: React.Dispatch<React.SetStateAction<User[]>>;
 }
 
 interface RealTimeLocationCoords {
@@ -57,6 +59,7 @@ const SEE_LOCATIONS_QUERY = gql`
 export default function RealTimeMap({
   initialLatitude,
   initialLongitude,
+  setCurrentUsers,
 }: RealTimeMapProps) {
   const checkingDigits: number = 4;
   const rerenderThreshHold: number = 0.03;
@@ -126,11 +129,7 @@ export default function RealTimeMap({
 
   const [updateLocationMutation, {loading: updatingLocation}] =
     useUpdateLocationMutation({
-      onCompleted: (data: UpdateLocationMutation): void => {
-        // console.log('---------------');
-        // console.log(data);
-        // console.log('---------------');
-      },
+      onCompleted: (data: UpdateLocationMutation): void => {},
     });
 
   // const {
@@ -202,7 +201,14 @@ export default function RealTimeMap({
     } else {
       console.log('Already Subscribed !!!!!!!!!!!!!!!!!!');
     }
-    console.log('location data : ', locationData);
+    if (locationData?.selectLocations) {
+      console.log('location data : ', locationData);
+      const locationsList = locationData.selectLocations.locations;
+      if (locationsList) {
+        const users = locationsList.map(location => location.user);
+        setCurrentUsers(users);
+      }
+    }
   }, [locationData, subscribed]);
 
   useEffect(() => {
@@ -296,12 +302,6 @@ export default function RealTimeMap({
     }
   }, [initialLoading]);
 
-  useEffect(() => {
-    console.log('Initiate');
-    // 캐쉬 전부 삭제
-    //
-  }, [initialLatitude, initialLongitude]);
-
   return (
     <MapScreenLayout loading={initialLoading}>
       <MapView
@@ -327,16 +327,6 @@ export default function RealTimeMap({
                   fillColor="rgba(135, 206, 235, 0.5)" // 반투명한 하늘색으로 채우기
                 />
               );
-              /*              return (
-                <Marker
-                  key={location.userId} // userId가 키 -> apollo.tsx 에서 캐쉬 설정 필요
-                  coordinate={{
-                    latitude: location.lat,
-                    longitude: location.lon,
-                  }}
-                  title={`User ID: ${location.userId}`}
-                />
-              );*/
             }
           })}
       </MapView>

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
+import {User} from '../../generated/graphql.ts';
 
 interface PhotoData {
   id: number;
@@ -15,6 +16,7 @@ interface PhotoData {
 }
 
 interface SideBarProps {
+  currentUsers: User[];
   photos: PhotoData[];
   isLoading: boolean;
   onClose: () => void;
@@ -22,6 +24,7 @@ interface SideBarProps {
 }
 
 const SideBar: React.FC<SideBarProps> = ({
+  currentUsers,
   photos,
   isLoading,
   onClose,
@@ -31,11 +34,15 @@ const SideBar: React.FC<SideBarProps> = ({
     <View style={styles.sidebar}>
       {/* 사이드바 컨텐츠 */}
       <FlatList
-        data={photos}
+        data={currentUsers}
         renderItem={({item}) => (
           <TouchableOpacity style={styles.sidebarItem}>
             <Image
-              source={{uri: item.url}}
+              source={{
+                uri: `https://via.placeholder.com/300/${Math.floor(
+                  Math.random() * 16777215,
+                ).toString(16)}/FFFFFF?text=Photo 1`,
+              }}
               style={{width: 100, height: 100, borderRadius: 50}}
             />
           </TouchableOpacity>
