@@ -28,6 +28,7 @@ export const LOCATION_FRAGMENT = gql`
     lon
     user {
       id
+      avatar
       username
       sex
     }

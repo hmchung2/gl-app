@@ -3,33 +3,38 @@ import {
   View,
   Platform,
   PermissionsAndroid,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
   DrawerLayoutAndroid,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import RealTimeMap from '../components/map/RealTimeMap.tsx';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import SideBar from '../components/map/SideBar.tsx';
-import {styles as SideBarStyles} from '../components/map/SideBar.tsx';
 import {User} from '../generated/graphql.ts';
+import styled from 'styled-components/native';
 
 interface LocationCoords {
   latitude: number;
   longitude: number;
 }
 
-interface PhotoData {
-  id: number;
-  url: string;
-}
+const SideBarButton = styled.TouchableOpacity`
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+`;
+
+const SidebarButtonText = styled.Text`
+  font-size: 18px;
+  color: blue;
+`;
 
 export default function MapScreen() {
   const [initialLocation, setInitialLocation] = useState<LocationCoords | null>(
     null,
   );
-  const [photos, setPhotos] = useState<PhotoData[]>([]); // 추가 데이터
   const [currentUsers, setCurrentUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false); // 추가 데이터 로딩 상태
 
@@ -89,7 +94,6 @@ export default function MapScreen() {
       renderNavigationView={() => (
         <SideBar
           currentUsers={currentUsers}
-          photos={photos}
           isLoading={isLoading}
           onClose={closeSidebar}
           onEndReached={handleEndReached}
@@ -103,11 +107,9 @@ export default function MapScreen() {
             setCurrentUsers={setCurrentUsers}
           />
         )}
-        <TouchableOpacity
-          onPress={openSidebar}
-          style={SideBarStyles.sidebarButton}>
-          <Text style={SideBarStyles.sidebarButtonText}>{'<'}</Text>
-        </TouchableOpacity>
+        <SideBarButton onPress={openSidebar}>
+          <SidebarButtonText>{'<'}</SidebarButtonText>
+        </SideBarButton>
       </View>
     </DrawerLayoutAndroid>
   );

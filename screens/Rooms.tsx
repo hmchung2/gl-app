@@ -77,8 +77,6 @@ interface ChatDataProps {
 
 export default function Rooms() {
   const noDataImgSrc = require('../assets/noData.png');
-  const theme = useTheme();
-  console.log('see room 1 : ');
 
   const {data: chatData, loading: chatLoading} = useQuery<ChatDataProps>(
     SEE_ROOMS_QUERY,

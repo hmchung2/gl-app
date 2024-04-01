@@ -4,100 +4,88 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  Image,
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
 import {User} from '../../generated/graphql.ts';
-
-interface PhotoData {
-  id: number;
-  url: string;
-}
+import AvatarImg from '../users/AvatarImg.tsx';
+import styled from 'styled-components/native';
 
 interface SideBarProps {
   currentUsers: User[];
-  photos: PhotoData[];
   isLoading: boolean;
   onClose: () => void;
   onEndReached: () => void;
 }
 
+interface RenderItemProps {
+  item: User;
+}
+
+const Data = styled.View``;
+
+const Username = styled.Text`
+  color: ${props => props.theme.fontColor};
+  font-weight: 600;
+  font-size: 16px;
+  padding-left: 10px;
+`;
+
+const Column = styled.View`
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+`;
+
+const SidebarView = styled.View`
+  background-color: ${props => props.theme.bgColor};
+  flex-direction: row;
+  flex: 1;
+`;
+
+const SeparatorView = styled.View`
+  width: 90%;
+  height: 1px;
+  align-self: center;
+  background-color: ${props => props.theme.separatorLineColor};
+`;
+
 const SideBar: React.FC<SideBarProps> = ({
   currentUsers,
-  photos,
   isLoading,
   onClose,
   onEndReached,
 }) => {
+  const renderItem = ({item}: RenderItemProps) => {
+    console.log('item : ', item);
+    return (
+      <TouchableOpacity>
+        <Column>
+          <AvatarImg
+            avatarPath={item.avatar ? item.avatar : undefined}
+            size={70}
+          />
+          <Data>
+            <Username>{item.username}</Username>
+          </Data>
+        </Column>
+      </TouchableOpacity>
+    );
+  };
+
   return (
-    <View style={styles.sidebar}>
+    <SidebarView>
       {/* 사이드바 컨텐츠 */}
       <FlatList
         data={currentUsers}
-        renderItem={({item}) => (
-          <TouchableOpacity style={styles.sidebarItem}>
-            <Image
-              source={{
-                uri: `https://via.placeholder.com/300/${Math.floor(
-                  Math.random() * 16777215,
-                ).toString(16)}/FFFFFF?text=Photo 1`,
-              }}
-              style={{width: 100, height: 100, borderRadius: 50}}
-            />
-          </TouchableOpacity>
-        )}
-        keyExtractor={item => item.id.toString()}
+        renderItem={renderItem}
+        keyExtractor={item => '' + item.id}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.1}
         ListFooterComponent={isLoading ? <ActivityIndicator /> : null}
+        ItemSeparatorComponent={SeparatorView}
       />
-      <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-        <Text style={styles.closeButtonText}>x</Text>
-      </TouchableOpacity>
-    </View>
+    </SidebarView>
   );
 };
-
-const styles = StyleSheet.create({
-  sidebar: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    width: 200,
-    backgroundColor: 'white',
-    padding: 20,
-    zIndex: 1000, // 사이드바가 지도 위에 올 수 있도록 설정
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-  },
-  closeButtonText: {
-    fontSize: 16,
-    color: 'blue',
-  },
-  sidebarItem: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  sidebarButton: {
-    position: 'absolute',
-    top: '50%',
-    right: 0,
-    transform: [{translateY: -25}],
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 5,
-  },
-  sidebarButtonText: {
-    fontSize: 16,
-    color: 'blue',
-  },
-});
-
 export default SideBar;
-export {styles};

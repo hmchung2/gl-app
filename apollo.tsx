@@ -35,13 +35,12 @@ export const logUserOut = async (): Promise<void> => {
 };
 
 const uploadHttpLink: ApolloLink = createUploadLink({
-  uri: 'https://green-light-backend-04c79b6adf93.herokuapp.com/graphql',
+  uri: 'https://3fa1-221-143-244-19.ngrok-free.app/graphql',
 });
 
 const wsLink: GraphQLWsLink = new GraphQLWsLink(
   createClient({
-    url: 'ws://green-light-backend-04c79b6adf93.herokuapp.com/graphql',
-
+    url: 'ws://3fa1-221-143-244-19.ngrok-free.app/graphql',
     connectionParams: () => {
       return {
         token: tokenVar(),

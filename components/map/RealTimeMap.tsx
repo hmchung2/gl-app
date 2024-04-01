@@ -112,8 +112,8 @@ export default function RealTimeMap({
   const initialRegion: Region = {
     latitude: initialLatitude || 0,
     longitude: initialLongitude || 0,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
+    latitudeDelta: 0.005, // Smaller delta values for higher zoom
+    longitudeDelta: 0.005,
   };
 
   // useEffect(() => {
@@ -169,7 +169,6 @@ export default function RealTimeMap({
             fragment: LOCATION_FRAGMENT,
             data: realTimeLocation,
           });
-
           console.log('locationFragment : ', locationFragment);
           const cacheId = client.cache.identify({
             __typename: 'Location',
@@ -247,8 +246,6 @@ export default function RealTimeMap({
                 realTimeLocationRef.current.longitude,
             );
             setRealTimeLocation(currentLocation);
-          } else {
-            console.log('same RealTime~~~~~~~~~~r');
           }
         },
         error => {
@@ -306,9 +303,21 @@ export default function RealTimeMap({
     <MapScreenLayout loading={initialLoading}>
       <MapView
         style={{flex: 1}}
+        // camera={{
+        //   center: initialRegion, // initialRegion should have latitude and longitude
+        //   pitch: 0, // 0 for looking straight down
+        //   heading: userHeading, // Dynamically update this based on the user's current heading
+        //   altitude: initialAltitude, // Set an initial altitude
+        //   zoom: 20, // Adjust the zoom level as needed
+        // }}
         region={initialRegion}
         showsUserLocation={true}
-        customMapStyle={customMapStyle}>
+        customMapStyle={customMapStyle}
+        zoomEnabled={false} // Disables zooming
+        scrollEnabled={false} // Disables panning
+        pitchEnabled={false} // Disables pitch tilt
+        rotateEnabled={true} // Disables rotation
+      >
         {locationData &&
           locationData.selectLocations &&
           locationData.selectLocations.locations &&
@@ -321,7 +330,7 @@ export default function RealTimeMap({
                     latitude: location.lat,
                     longitude: location.lon,
                   }}
-                  radius={35}
+                  radius={20}
                   strokeWidth={2}
                   strokeColor="blue"
                   fillColor="rgba(135, 206, 235, 0.5)" // 반투명한 하늘색으로 채우기
