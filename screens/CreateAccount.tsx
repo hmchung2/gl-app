@@ -72,9 +72,7 @@ export default function CreateAccount({navigation}: CreateAccountProps) {
                     },
                     {
                       text: 'OK',
-                      onPress: async () => {
-                        await signOut();
-                      },
+                      onPress: () => navigation.navigate('Welcome'),
                     },
                   ],
                 );

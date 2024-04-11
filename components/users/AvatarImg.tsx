@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 interface AvatarImgProps {
-  avatarPath: string | undefined;
+  avatarPath: string | null | undefined;
   size?: number; // Optional size parameter
 }
 

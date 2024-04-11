@@ -29,7 +29,7 @@ export default function LoggedInNav() {
         component={MessagesNav}
       />
       <Nav.Screen
-        name="StackProfileNavigation"
+        name="StackProfileNav"
         options={{headerShown: false}}
         component={ProfileStackNav}
       />

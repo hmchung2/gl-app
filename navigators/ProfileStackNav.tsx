@@ -5,11 +5,26 @@ import Profile from '../screens/Profile';
 import Followers from '../screens/Followers.tsx';
 import Following from '../screens/Following.tsx';
 import EditProfile from '../screens/EditProfile';
+import SimpleProfile from '../screens/SimpleProfile.tsx';
+import {RootStackParamList} from '../shared/shared.types.ts';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useEffect} from 'react';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
-const ProfileStackNav = () => {
+type StackProfileNavProps = NativeStackScreenProps<
+  RootStackParamList,
+  'StackProfileNav'
+>;
+
+const ProfileStackNav = ({navigation, route}: StackProfileNavProps) => {
+  console.log('profile stackNav route : ', route);
+
   const isDarkMode: 'light' | 'dark' = useReactiveVar(colorModeVar);
+
+  useEffect(() => {
+    navigation.setOptions({headerShown: false});
+  }, []);
 
   return (
     <Stack.Navigator
@@ -20,6 +35,11 @@ const ProfileStackNav = () => {
         },
         headerTintColor: isDarkMode === 'light' ? 'black' : 'white',
       }}>
+      <Stack.Screen
+        name="SimpleProfile"
+        component={SimpleProfile}
+        initialParams={route.params}
+      />
       <Stack.Screen name="StackProfile" component={Profile} />
       <Stack.Screen
         name="StackFollowers"

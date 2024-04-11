@@ -299,6 +299,7 @@ export type User = {
   avatar?: Maybe<Scalars['String']['output']>;
   birthDay: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   followers?: Maybe<Array<Maybe<User>>>;
   followersCount: Scalars['Int']['output'];
@@ -311,6 +312,7 @@ export type User = {
   introduction?: Maybe<Scalars['String']['output']>;
   isFollower: Scalars['Boolean']['output'];
   isFollowing: Scalars['Boolean']['output'];
+  isMe: Scalars['Boolean']['output'];
   location?: Maybe<Location>;
   password: Scalars['String']['output'];
   phoneNo: Scalars['String']['output'];
@@ -442,6 +444,13 @@ export type SeeRoomQueryVariables = Exact<{
 
 
 export type SeeRoomQuery = { __typename?: 'Query', seeRoom?: { __typename?: 'Room', id: number, messages?: Array<{ __typename?: 'Message', id: number, payload: string, read: boolean, user: { __typename?: 'User', id: number, username: string, avatar?: string | null } } | null> | null } | null };
+
+export type SeeSimpleProfileQueryVariables = Exact<{
+  seeProfileId: Scalars['Int']['input'];
+}>;
+
+
+export type SeeSimpleProfileQuery = { __typename?: 'Query', seeProfile?: { __typename?: 'User', id: number, birthDay: string, avatar?: string | null, isFollower: boolean, isFollowing: boolean, username: string, sex: string, instaUsername?: string | null, description?: string | null, isMe: boolean, photos?: Array<{ __typename?: 'Photo', id: number, file: string } | null> | null } | null };
 
 export type SelectLocationsQueryVariables = Exact<{
   lat: Scalars['Float']['input'];
@@ -769,7 +778,7 @@ export const SeeFollowingDocument = gql`
  *   },
  * });
  */
-export function useSeeFollowingQuery(baseOptions: Apollo.QueryHookOptions<SeeFollowingQuery, SeeFollowingQueryVariables>) {
+export function useSeeFollowingQuery(baseOptions: Apollo.QueryHookOptions<SeeFollowingQuery, SeeFollowingQueryVariables> & ({ variables: SeeFollowingQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<SeeFollowingQuery, SeeFollowingQueryVariables>(SeeFollowingDocument, options);
       }
@@ -817,7 +826,7 @@ export const SeeFollowersDocument = gql`
  *   },
  * });
  */
-export function useSeeFollowersQuery(baseOptions: Apollo.QueryHookOptions<SeeFollowersQuery, SeeFollowersQueryVariables>) {
+export function useSeeFollowersQuery(baseOptions: Apollo.QueryHookOptions<SeeFollowersQuery, SeeFollowersQueryVariables> & ({ variables: SeeFollowersQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<SeeFollowersQuery, SeeFollowersQueryVariables>(SeeFollowersDocument, options);
       }
@@ -866,7 +875,7 @@ export const SeeProfileDocument = gql`
  *   },
  * });
  */
-export function useSeeProfileQuery(baseOptions: Apollo.QueryHookOptions<SeeProfileQuery, SeeProfileQueryVariables>) {
+export function useSeeProfileQuery(baseOptions: Apollo.QueryHookOptions<SeeProfileQuery, SeeProfileQueryVariables> & ({ variables: SeeProfileQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<SeeProfileQuery, SeeProfileQueryVariables>(SeeProfileDocument, options);
       }
@@ -916,7 +925,7 @@ export const SeeRoomDocument = gql`
  *   },
  * });
  */
-export function useSeeRoomQuery(baseOptions: Apollo.QueryHookOptions<SeeRoomQuery, SeeRoomQueryVariables>) {
+export function useSeeRoomQuery(baseOptions: Apollo.QueryHookOptions<SeeRoomQuery, SeeRoomQueryVariables> & ({ variables: SeeRoomQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<SeeRoomQuery, SeeRoomQueryVariables>(SeeRoomDocument, options);
       }
@@ -932,6 +941,59 @@ export type SeeRoomQueryHookResult = ReturnType<typeof useSeeRoomQuery>;
 export type SeeRoomLazyQueryHookResult = ReturnType<typeof useSeeRoomLazyQuery>;
 export type SeeRoomSuspenseQueryHookResult = ReturnType<typeof useSeeRoomSuspenseQuery>;
 export type SeeRoomQueryResult = Apollo.QueryResult<SeeRoomQuery, SeeRoomQueryVariables>;
+export const SeeSimpleProfileDocument = gql`
+    query SeeSimpleProfile($seeProfileId: Int!) {
+  seeProfile(id: $seeProfileId) {
+    id
+    birthDay
+    avatar
+    photos {
+      id
+      file
+    }
+    isFollower
+    isFollowing
+    username
+    sex
+    instaUsername
+    description
+    isMe
+  }
+}
+    `;
+
+/**
+ * __useSeeSimpleProfileQuery__
+ *
+ * To run a query within a React component, call `useSeeSimpleProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeeSimpleProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeeSimpleProfileQuery({
+ *   variables: {
+ *      seeProfileId: // value for 'seeProfileId'
+ *   },
+ * });
+ */
+export function useSeeSimpleProfileQuery(baseOptions: Apollo.QueryHookOptions<SeeSimpleProfileQuery, SeeSimpleProfileQueryVariables> & ({ variables: SeeSimpleProfileQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeeSimpleProfileQuery, SeeSimpleProfileQueryVariables>(SeeSimpleProfileDocument, options);
+      }
+export function useSeeSimpleProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeeSimpleProfileQuery, SeeSimpleProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeeSimpleProfileQuery, SeeSimpleProfileQueryVariables>(SeeSimpleProfileDocument, options);
+        }
+export function useSeeSimpleProfileSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SeeSimpleProfileQuery, SeeSimpleProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SeeSimpleProfileQuery, SeeSimpleProfileQueryVariables>(SeeSimpleProfileDocument, options);
+        }
+export type SeeSimpleProfileQueryHookResult = ReturnType<typeof useSeeSimpleProfileQuery>;
+export type SeeSimpleProfileLazyQueryHookResult = ReturnType<typeof useSeeSimpleProfileLazyQuery>;
+export type SeeSimpleProfileSuspenseQueryHookResult = ReturnType<typeof useSeeSimpleProfileSuspenseQuery>;
+export type SeeSimpleProfileQueryResult = Apollo.QueryResult<SeeSimpleProfileQuery, SeeSimpleProfileQueryVariables>;
 export const SelectLocationsDocument = gql`
     query SelectLocations($lat: Float!, $lon: Float!) {
   selectLocations(lat: $lat, lon: $lon) {
@@ -962,7 +1024,7 @@ export const SelectLocationsDocument = gql`
  *   },
  * });
  */
-export function useSelectLocationsQuery(baseOptions: Apollo.QueryHookOptions<SelectLocationsQuery, SelectLocationsQueryVariables>) {
+export function useSelectLocationsQuery(baseOptions: Apollo.QueryHookOptions<SelectLocationsQuery, SelectLocationsQueryVariables> & ({ variables: SelectLocationsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<SelectLocationsQuery, SelectLocationsQueryVariables>(SelectLocationsDocument, options);
       }
@@ -1048,7 +1110,7 @@ export const MapUpdatesDocument = gql`
  *   },
  * });
  */
-export function useMapUpdatesSubscription(baseOptions: Apollo.SubscriptionHookOptions<MapUpdatesSubscription, MapUpdatesSubscriptionVariables>) {
+export function useMapUpdatesSubscription(baseOptions: Apollo.SubscriptionHookOptions<MapUpdatesSubscription, MapUpdatesSubscriptionVariables> & ({ variables: MapUpdatesSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useSubscription<MapUpdatesSubscription, MapUpdatesSubscriptionVariables>(MapUpdatesDocument, options);
       }
@@ -1085,7 +1147,7 @@ export const RoomUpdatesDocument = gql`
  *   },
  * });
  */
-export function useRoomUpdatesSubscription(baseOptions: Apollo.SubscriptionHookOptions<RoomUpdatesSubscription, RoomUpdatesSubscriptionVariables>) {
+export function useRoomUpdatesSubscription(baseOptions: Apollo.SubscriptionHookOptions<RoomUpdatesSubscription, RoomUpdatesSubscriptionVariables> & ({ variables: RoomUpdatesSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useSubscription<RoomUpdatesSubscription, RoomUpdatesSubscriptionVariables>(RoomUpdatesDocument, options);
       }

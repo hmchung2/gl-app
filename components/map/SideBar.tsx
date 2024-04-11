@@ -10,6 +10,9 @@ import {
 import {User} from '../../generated/graphql.ts';
 import AvatarImg from '../users/AvatarImg.tsx';
 import styled from 'styled-components/native';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../shared/shared.types.ts';
 
 interface SideBarProps {
   currentUsers: User[];
@@ -50,16 +53,32 @@ const SeparatorView = styled.View`
   background-color: ${props => props.theme.separatorLineColor};
 `;
 
-const SideBar: React.FC<SideBarProps> = ({
+type RoomItemNavigationProps = NativeStackNavigationProp<RootStackParamList>;
+
+const SideBar = ({
   currentUsers,
   isLoading,
   onClose,
   onEndReached,
-}) => {
+}: SideBarProps) => {
+  const navigation = useNavigation<RoomItemNavigationProps>();
+
+  const goToProfile = (id: number, username: string) => {
+    // Navigate to 'SimpleProfile' screen within 'ProfileStackNav'
+    // navigation.navigate('StackProfileNav', {
+    //   screen: 'SimpleProfile',
+    //   params: {id, username},
+    // });
+    navigation.navigate('StackProfileNav', {
+      id,
+      username,
+    });
+  };
+
   const renderItem = ({item}: RenderItemProps) => {
     console.log('item : ', item);
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => goToProfile(item.id, item.username)}>
         <Column>
           <AvatarImg
             avatarPath={item.avatar ? item.avatar : undefined}

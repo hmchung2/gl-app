@@ -56,7 +56,6 @@ export default function TabsNav() {
           tabPress: event => {
             // Prevent the default action (which would be opening the EmptyScreen)
             event.preventDefault();
-
             // Navigate to the desired screen instead
             navigation.navigate('StackMessagesNav');
           },
@@ -72,14 +71,14 @@ export default function TabsNav() {
         }}
       />
       <Tabs.Screen
-        name="StackProfileNavigation"
+        name="StackProfileNav"
         component={ProfileStackNav}
         listeners={({navigation}) => ({
           tabPress: event => {
             // Prevent the default action (which would be opening the EmptyScreen)
             event.preventDefault();
             // Navigate to the desired screen instead
-            navigation.navigate('StackProfileNavigation');
+            navigation.navigate('StackProfileNav');
           },
         })}
         options={{

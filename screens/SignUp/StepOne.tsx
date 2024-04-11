@@ -100,13 +100,6 @@ export default function StepOne({navigation}: StepOneProps) {
     });
   };
 
-  useEffect(() => {
-    if (username && password && repassword) {
-      handleGoogleNext('StepTwo');
-      setValidated(true);
-    }
-  }, [username, password, repassword]);
-
   const handleGoogleNext = async (nextPage: keyof RootStackParamList) => {
     console.log('Email: ', username);
     setValidated(true);
@@ -141,10 +134,7 @@ export default function StepOne({navigation}: StepOneProps) {
   }
 
   const HeaderBar = () => (
-    <StepBar
-      currentStep={1}
-      onBeforeNavigate={handleNext} // temp onBeforeNavigate={handleNext}
-    />
+    <StepBar currentStep={1} onBeforeNavigate={handleNext} />
   );
 
   useEffect(() => {
@@ -167,7 +157,6 @@ export default function StepOne({navigation}: StepOneProps) {
           onSubmitEditing={() => setActiveInput('password')}
           placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
           onChangeText={text => handleInputChange(setUsername, text)}
-          value={username}
           autoFocus={activeInput === 'username'}
         />
         <TextInput
@@ -176,7 +165,6 @@ export default function StepOne({navigation}: StepOneProps) {
           onSubmitEditing={() => setActiveInput('repassword')}
           placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
           onChangeText={text => handleInputChange(setPassword, text)}
-          value={password}
           secureTextEntry
           autoFocus={activeInput === 'password'}
         />
@@ -185,7 +173,6 @@ export default function StepOne({navigation}: StepOneProps) {
           returnKeyType="done"
           placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
           onChangeText={text => handleInputChange(setRepassword, text)}
-          value={repassword}
           lastOne={true}
           secureTextEntry
           autoFocus={activeInput === 'repassword'}

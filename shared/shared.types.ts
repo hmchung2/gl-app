@@ -18,12 +18,13 @@ export type RootStackParamList = {
   MyProfile: undefined;
   Map: undefined;
   Matches: undefined;
-  StackProfileNavigation: any;
+  StackProfileNav: any;
   StackFollowers: any;
   StackFollowing: any;
   StackProfile: any;
   StackEditProfile: any;
   StackMessagesNav: undefined;
+  SimpleProfile: {id: number; username: string};
 };
 
 export interface User {

@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {DeviceEventEmitter} from 'react-native';
 // Assuming you have a library or method to get compass heading
+// @ts-ignore
 import {getCompassHeading} from 'your-compass-heading-library';
 
 const useUserHeading = () => {

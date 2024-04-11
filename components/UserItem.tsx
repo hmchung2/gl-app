@@ -128,7 +128,7 @@ const UserItem = ({username, avatar, isFollowing, id}: UserItemProps) => {
     });
 
   const handleNavigateToProfileNavigation = (): void => {
-    navigation.navigate('StackProfileNavigation');
+    navigation.navigate('StackProfileNav');
   };
 
   const handleToggleFollow = async (
