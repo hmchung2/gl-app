@@ -91,6 +91,7 @@ export interface EditProfileProps {
 }
 
 const EditProfile = ({route, navigation}: EditProfileNavigationProps) => {
+  // @ts-ignore
   const {name, accountName, profileImage} = route.params;
 
   const {data: meData} = useMe();

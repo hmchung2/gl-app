@@ -69,7 +69,7 @@ function App(): React.JSX.Element | null {
     console.log('dev env');
     loadDevMessages();
     loadErrorMessages();
-    // apolloDevToolsInit(client); // apollo cache tool plugin. delete this later
+    apolloDevToolsInit(client); // apollo cache tool plugin. delete this later
   }
 
   return (

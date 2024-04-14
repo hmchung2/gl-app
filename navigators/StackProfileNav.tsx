@@ -9,6 +9,7 @@ import SimpleProfile from '../screens/SimpleProfile.tsx';
 import {RootStackParamList} from '../shared/shared.types.ts';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useEffect} from 'react';
+import Photo from '../screens/Photo.tsx';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -17,7 +18,7 @@ type StackProfileNavProps = NativeStackScreenProps<
   'StackProfileNav'
 >;
 
-const ProfileStackNav = ({navigation, route}: StackProfileNavProps) => {
+const StackProfileNav = ({navigation, route}: StackProfileNavProps) => {
   console.log('profile stackNav route : ', route);
 
   const isDarkMode: 'light' | 'dark' = useReactiveVar(colorModeVar);
@@ -56,8 +57,13 @@ const ProfileStackNav = ({navigation, route}: StackProfileNavProps) => {
         component={EditProfile}
         options={{headerTitle: 'Edit Profile'}}
       />
+      <Stack.Screen
+        name="StackPhoto"
+        component={Photo}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
 
-export default ProfileStackNav;
+export default StackProfileNav;

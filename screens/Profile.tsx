@@ -181,24 +181,24 @@ const Profile = ({navigation}: ProfileNavigationProps) => {
   const seeProfileLoading = true;
   // test
   const seeProfileData = null;
-  const handleNavigateToStackRoomsNavigation = null;
+  const handleNavigateToStackRoomsNavigation = () => {};
   const isMe = true;
   const handleNavigateToFollowersScreen = (): void => {
     navigation.navigate('StackFollowers', {
-      username: data?.seeProfile.username,
-      followers: data.seeProfile.followers,
+      username: data?.seeProfile?.username,
+      followers: data?.seeProfile?.followers,
     });
   };
   const handleNavigateToFollowingScreen = (): void => {
     navigation.navigate('StackFollowing', {
-      username: data?.seeProfile.username,
-      followers: data.seeProfile.following,
+      username: data?.seeProfile?.username,
+      followers: data?.seeProfile?.following,
     });
   };
 
   const handleNavigateToEditProfileScreen = (): void => {
     navigation.navigate('StackEditProfile', {
-      username: data?.seeProfile.username,
+      username: data?.seeProfile?.username,
       following: data?.seeProfile?.following,
     });
   };
@@ -282,7 +282,7 @@ const Profile = ({navigation}: ProfileNavigationProps) => {
 
   const onRefresh = async (): Promise<void> => {
     setRefreshing(true);
-    await refetch();
+    // await refetch();
     setRefreshing(false);
   };
 
@@ -317,7 +317,7 @@ const Profile = ({navigation}: ProfileNavigationProps) => {
               <UserInfoContainer width={width}>
                 <PostContainer>
                   <CommonNumber>
-                    {seeProfileData?.seeProfile.user?.totalPhotos ?? 0}
+                    {/*{seeProfileData?.seeProfile.user?.totalPhotos ?? 0}*/}
                   </CommonNumber>
                   <CommonText>Post</CommonText>
                 </PostContainer>
@@ -381,7 +381,7 @@ const Profile = ({navigation}: ProfileNavigationProps) => {
               showsVerticalScrollIndicator={false}
               refreshing={refreshing}
               onRefresh={onRefresh}
-              data={seeProfileData?.seeProfile.user?.photos}
+              data={[]}
               renderItem={renderItem}
               keyExtractor={(photo: any) => String(photo.id)}
             />

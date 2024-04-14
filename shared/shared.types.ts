@@ -25,6 +25,7 @@ export type RootStackParamList = {
   StackEditProfile: any;
   StackMessagesNav: undefined;
   SimpleProfile: {id: number; username: string};
+  StackPhoto: {photoUrl: string};
 };
 
 export interface User {

@@ -171,7 +171,7 @@ export type MutationSendMessageArgs = {
 
 
 export type MutationUnfollowUserArgs = {
-  username: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
 };
 
 
@@ -403,7 +403,7 @@ export type SendMessageMutationVariables = Exact<{
 export type SendMessageMutation = { __typename?: 'Mutation', sendMessage: { __typename?: 'MutationResponse', ok: boolean, id?: number | null } };
 
 export type UnfollowUserMutationVariables = Exact<{
-  username: Scalars['String']['input'];
+  followUserId: Scalars['Int']['input'];
 }>;
 
 
@@ -678,8 +678,8 @@ export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMuta
 export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
 export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
 export const UnfollowUserDocument = gql`
-    mutation UnfollowUser($username: String!) {
-  unfollowUser(username: $username) {
+    mutation UnfollowUser($followUserId: Int!) {
+  unfollowUser(id: $followUserId) {
     ok
     id
     error
@@ -701,7 +701,7 @@ export type UnfollowUserMutationFn = Apollo.MutationFunction<UnfollowUserMutatio
  * @example
  * const [unfollowUserMutation, { data, loading, error }] = useUnfollowUserMutation({
  *   variables: {
- *      username: // value for 'username'
+ *      followUserId: // value for 'followUserId'
  *   },
  * });
  */

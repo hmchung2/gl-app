@@ -12,6 +12,8 @@ import SocialLoginButtons from './Auth/SocialButton';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import InstagramLoginScreen from './Auth/InstaLogin';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../shared/shared.types.ts';
 
 const LOGIN_MUTATION = gql`
   mutation login($username: String!, $password: String!) {
@@ -23,16 +25,12 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-interface LoginProps {
-  route: {
-    params: {
-      username?: string;
-      password?: string;
-    };
-  };
-}
+type LoginNavigationProps = NativeStackScreenProps<
+  RootStackParamList,
+  'StackLogin'
+>;
 
-const Login: FC<LoginProps> = ({route: {params}}) => {
+const Login = ({route: {params}}: LoginNavigationProps) => {
   const googleSigninConfigure = () => {
     GoogleSignin.configure({
       webClientId:
@@ -52,11 +50,11 @@ const Login: FC<LoginProps> = ({route: {params}}) => {
       setValue('username', userInfo.user.email);
       setValue('password', userInfo.user.id);
       handleSubmit(onValid)();
-      // eslint-disable-next-line no-catch-shadow
     } catch (error) {
       console.error('Google 로그인 실패:', error);
     }
   }
+
   const [errorMsg, setErrorMsg] = useState('');
 
   const {register, handleSubmit, setValue, watch} = useForm({

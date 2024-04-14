@@ -5,7 +5,7 @@ import TabIcon from '../components/nav/TabIcon';
 import {useTheme} from 'styled-components';
 import MapScreen from '../screens/MapScreen';
 import {RootStackParamList} from '../shared/shared.types.ts';
-import ProfileStackNav from './ProfileStackNav.tsx';
+import StackProfileNav from './StackProfileNav.tsx';
 
 const Tabs = createBottomTabNavigator<RootStackParamList>();
 
@@ -72,7 +72,7 @@ export default function TabsNav() {
       />
       <Tabs.Screen
         name="StackProfileNav"
-        component={ProfileStackNav}
+        component={StackProfileNav}
         listeners={({navigation}) => ({
           tabPress: event => {
             // Prevent the default action (which would be opening the EmptyScreen)

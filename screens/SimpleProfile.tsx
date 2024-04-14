@@ -1,12 +1,22 @@
-import {useSeeSimpleProfileQuery} from '../generated/graphql.ts';
+import {
+  useFollowUserMutation,
+  useSeeSimpleProfileQuery,
+  useUnfollowUserMutation,
+} from '../generated/graphql.ts';
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../shared/shared.types.ts';
 import Loading from '../components/Loading.tsx';
-import {Avatar} from 'react-native-elements';
 import AvatarImg from '../components/users/AvatarImg.tsx';
-import {FlatList, useWindowDimensions} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Modal,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
 import {colors} from '../colors.ts';
 import {logUserOut} from '../apollo.tsx';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -19,6 +29,19 @@ type SimpleProfileProps = NativeStackScreenProps<
 const ProfileContainer = styled.View`
   flex: 1;
   width: 100%;
+`;
+
+const ModalBackground = styled(TouchableOpacity)`
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+`;
+
+const ZoomedPhoto = styled(Image)`
+  width: 80%;
+  height: 80%;
+  resize-mode: contain;
 `;
 
 const PostContainer = styled.View``;
@@ -141,6 +164,9 @@ export default function SimpleProfile({
     params: {id, username},
   },
 }: SimpleProfileProps) {
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
   useEffect(() => {
     if (username) {
       navigation.setOptions({
@@ -149,10 +175,22 @@ export default function SimpleProfile({
     }
   }, []);
 
+  const {data: seeProfileData, loading: seeProfileLoading} =
+    useSeeSimpleProfileQuery({
+      variables: {seeProfileId: id},
+    });
+
   const {width} = useWindowDimensions();
+
   const photoSize = width / 5;
-  const handleNavigateToPhotoScreen = (photoId: number): void => {
-    // navigation.navigate("StackPhoto", { photoId });
+
+  const zoomInPhoto = (url: string): void => {
+    setPhotoUrl(url);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
   };
 
   const RowSeparator = () => <GapView />;
@@ -165,10 +203,9 @@ export default function SimpleProfile({
         </ProfilePhotoContainer>
       );
     }
-
     return (
       <ProfilePhotoContainer
-        onPress={() => handleNavigateToPhotoScreen(photo.id)}
+        onPress={() => zoomInPhoto(photo.file)}
         width={width}>
         <ProfilePhoto width={width} source={{uri: photo.file}} />
       </ProfilePhotoContainer>
@@ -178,11 +215,6 @@ export default function SimpleProfile({
     navigation.navigate('StackMessagesNav');
     // need to work on specific message room
   };
-
-  const {data: seeProfileData, loading: seeProfileLoading} =
-    useSeeSimpleProfileQuery({
-      variables: {seeProfileId: id},
-    });
 
   const originalPhotos = seeProfileData?.seeProfile?.photos || [];
   // Ensure the array has exactly 4 items, filling with null for empty spots
@@ -201,10 +233,73 @@ export default function SimpleProfile({
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   };
 
-  console.log('seeProfileData : ', seeProfileData);
+  const [followUserMutation, {loading: followUserLoading}] =
+    useFollowUserMutation({
+      update: (cache, {data}) => {
+        // console.log('follow cache : ', cache);
+        // console.log('follow data : ', data);
+        cache.modify({
+          id: `User:{"id":${data?.followUser?.id}}`,
+          fields: {
+            isFollowing: (isFollowing: boolean) => true,
+          },
+        });
+      },
+    });
+
+  const [unfollowUserMutation, {loading: unfollowUserLoading}] =
+    useUnfollowUserMutation({
+      update: (cache, {data}) => {
+        cache.modify({
+          id: `User:{"id":${data?.unfollowUser?.id}}`,
+          fields: {
+            isFollowing: (isFollowing: boolean) => false,
+          },
+        });
+      },
+    });
+
+  const handleToggleFollow = async () => {
+    console.log(
+      'Attempting to toggle follow state for user ID:',
+      seeProfileData?.seeProfile?.id,
+    );
+    if (!seeProfileData?.seeProfile?.id) {
+      console.log('No user ID found, cannot follow/unfollow');
+      return; // Early return if there's no user ID
+    }
+    if (followUserLoading === true || unfollowUserLoading === true) {
+      return;
+    }
+
+    const isCurrentlyFollowing = seeProfileData?.seeProfile?.isFollowing;
+    console.log('isCurrentlyFollowing >>>', seeProfileData?.seeProfile);
+    try {
+      const mutationResponse = isCurrentlyFollowing
+        ? await unfollowUserMutation({
+            variables: {followUserId: seeProfileData.seeProfile.id},
+          })
+        : await followUserMutation({
+            variables: {followUserId: seeProfileData.seeProfile.id},
+          });
+      console.log('mutationResponse >>>', mutationResponse);
+    } catch (e) {
+      console.error('Error during the follow/unfollow operation:', e);
+    }
+  };
 
   return (
     <Container>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}>
+        <ModalBackground activeOpacity={1} onPress={closeModal}>
+          {photoUrl ? <ZoomedPhoto source={{uri: photoUrl}} /> : null}
+        </ModalBackground>
+      </Modal>
+
       {seeProfileLoading === true ? (
         <Loading />
       ) : (
@@ -240,12 +335,18 @@ export default function SimpleProfile({
                     <LeftActionButtonText>Edit Profile</LeftActionButtonText>
                   </LeftActionButton>
                 ) : (
-                  <LeftActionButton>
-                    <LeftActionButtonText>
-                      {seeProfileData?.seeProfile?.isFollowing
-                        ? 'UnFollow'
-                        : 'Follow'}
-                    </LeftActionButtonText>
+                  <LeftActionButton
+                    onPress={handleToggleFollow}
+                    disabled={followUserLoading || unfollowUserLoading}>
+                    {followUserLoading || unfollowUserLoading ? (
+                      <ActivityIndicator size="small" color="#FFFFFF" />
+                    ) : (
+                      <LeftActionButtonText>
+                        {seeProfileData?.seeProfile?.isFollowing
+                          ? 'Unfollow'
+                          : 'Follow'}
+                      </LeftActionButtonText>
+                    )}
                   </LeftActionButton>
                 )}
                 {seeProfileData?.seeProfile?.isMe ? (
@@ -253,7 +354,7 @@ export default function SimpleProfile({
                     <RightActionText>Log Out</RightActionText>
                   </RightAction>
                 ) : (
-                  <RightAction onPress={moveToMessage}>
+                  <RightAction onPress={moveToMessage} disabled={true}>
                     <RightActionText>Message</RightActionText>
                   </RightAction>
                 )}

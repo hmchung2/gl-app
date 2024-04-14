@@ -141,13 +141,13 @@ const UserItem = ({username, avatar, isFollowing, id}: UserItemProps) => {
     if (followUserLoading === true || unfollowUserLoading === true) {
       return;
     }
+    const followUserId = id;
     if (followState === false) {
       console.log('isFollowing is false, ', id);
-      const followUserId = id;
       await followUserMutation({variables: {followUserId}});
     } else {
       console.log('isFollowing is true, ', id);
-      await unfollowUserMutation({variables: {username}});
+      await unfollowUserMutation({variables: {followUserId}});
     }
 
     setFollowState(!followState);
