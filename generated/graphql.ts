@@ -31,8 +31,9 @@ export type Alarm = {
 
 export type Alarms = {
   __typename?: 'Alarms';
-  alarms?: Maybe<Array<Maybe<Alarm>>>;
-  unreadTotal: Scalars['Int']['output'];
+  alarms: Array<Alarm>;
+  id: Scalars['Int']['output'];
+  new: Scalars['Boolean']['output'];
 };
 
 export type Location = {
@@ -201,8 +202,10 @@ export type Photo = {
 
 export type Query = {
   __typename?: 'Query';
+  checkUnreadAlarm: Scalars['Boolean']['output'];
   initMap?: Maybe<Array<Maybe<Location>>>;
   me?: Maybe<User>;
+  readAlarms: Array<Alarm>;
   searchUsers: Array<Maybe<User>>;
   seeFollowers: SeeFollowersResult;
   seeFollowing: SeeFollowingResult;
@@ -219,6 +222,11 @@ export type Query = {
 export type QueryInitMapArgs = {
   lat: Scalars['Float']['input'];
   lon: Scalars['Float']['input'];
+};
+
+
+export type QueryReadAlarmsArgs = {
+  page?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -416,6 +424,18 @@ export type UpdateLocationMutationVariables = Exact<{
 
 
 export type UpdateLocationMutation = { __typename?: 'Mutation', updateLocation: { __typename?: 'MutationResponse', id?: number | null, ok: boolean, error?: string | null } };
+
+export type CheckUnreadAlarmQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CheckUnreadAlarmQuery = { __typename?: 'Query', checkUnreadAlarm: boolean };
+
+export type ReadAlarmsQueryVariables = Exact<{
+  page?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type ReadAlarmsQuery = { __typename?: 'Query', readAlarms: Array<{ __typename?: 'Alarm', id: number, msg: string, read: boolean }> };
 
 export type SeeFollowingQueryVariables = Exact<{
   page: Scalars['Int']['input'];
@@ -748,6 +768,85 @@ export function useUpdateLocationMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateLocationMutationHookResult = ReturnType<typeof useUpdateLocationMutation>;
 export type UpdateLocationMutationResult = Apollo.MutationResult<UpdateLocationMutation>;
 export type UpdateLocationMutationOptions = Apollo.BaseMutationOptions<UpdateLocationMutation, UpdateLocationMutationVariables>;
+export const CheckUnreadAlarmDocument = gql`
+    query CheckUnreadAlarm {
+  checkUnreadAlarm
+}
+    `;
+
+/**
+ * __useCheckUnreadAlarmQuery__
+ *
+ * To run a query within a React component, call `useCheckUnreadAlarmQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckUnreadAlarmQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckUnreadAlarmQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCheckUnreadAlarmQuery(baseOptions?: Apollo.QueryHookOptions<CheckUnreadAlarmQuery, CheckUnreadAlarmQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CheckUnreadAlarmQuery, CheckUnreadAlarmQueryVariables>(CheckUnreadAlarmDocument, options);
+      }
+export function useCheckUnreadAlarmLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckUnreadAlarmQuery, CheckUnreadAlarmQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CheckUnreadAlarmQuery, CheckUnreadAlarmQueryVariables>(CheckUnreadAlarmDocument, options);
+        }
+export function useCheckUnreadAlarmSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CheckUnreadAlarmQuery, CheckUnreadAlarmQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CheckUnreadAlarmQuery, CheckUnreadAlarmQueryVariables>(CheckUnreadAlarmDocument, options);
+        }
+export type CheckUnreadAlarmQueryHookResult = ReturnType<typeof useCheckUnreadAlarmQuery>;
+export type CheckUnreadAlarmLazyQueryHookResult = ReturnType<typeof useCheckUnreadAlarmLazyQuery>;
+export type CheckUnreadAlarmSuspenseQueryHookResult = ReturnType<typeof useCheckUnreadAlarmSuspenseQuery>;
+export type CheckUnreadAlarmQueryResult = Apollo.QueryResult<CheckUnreadAlarmQuery, CheckUnreadAlarmQueryVariables>;
+export const ReadAlarmsDocument = gql`
+    query ReadAlarms($page: Int) {
+  readAlarms(page: $page) {
+    id
+    msg
+    read
+  }
+}
+    `;
+
+/**
+ * __useReadAlarmsQuery__
+ *
+ * To run a query within a React component, call `useReadAlarmsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReadAlarmsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReadAlarmsQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *   },
+ * });
+ */
+export function useReadAlarmsQuery(baseOptions?: Apollo.QueryHookOptions<ReadAlarmsQuery, ReadAlarmsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ReadAlarmsQuery, ReadAlarmsQueryVariables>(ReadAlarmsDocument, options);
+      }
+export function useReadAlarmsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReadAlarmsQuery, ReadAlarmsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ReadAlarmsQuery, ReadAlarmsQueryVariables>(ReadAlarmsDocument, options);
+        }
+export function useReadAlarmsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ReadAlarmsQuery, ReadAlarmsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ReadAlarmsQuery, ReadAlarmsQueryVariables>(ReadAlarmsDocument, options);
+        }
+export type ReadAlarmsQueryHookResult = ReturnType<typeof useReadAlarmsQuery>;
+export type ReadAlarmsLazyQueryHookResult = ReturnType<typeof useReadAlarmsLazyQuery>;
+export type ReadAlarmsSuspenseQueryHookResult = ReturnType<typeof useReadAlarmsSuspenseQuery>;
+export type ReadAlarmsQueryResult = Apollo.QueryResult<ReadAlarmsQuery, ReadAlarmsQueryVariables>;
 export const SeeFollowingDocument = gql`
     query SeeFollowing($page: Int!) {
   seeFollowing(page: $page) {

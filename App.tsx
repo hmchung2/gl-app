@@ -5,16 +5,23 @@ import client, {colorModeVar, isLoggedInVar, tokenVar} from './apollo.tsx';
 import {ApolloProvider, useReactiveVar} from '@apollo/client';
 import {ThemeProvider} from 'styled-components/native';
 import {darkTheme, lightTheme} from './styles/themes.ts';
-import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
+import {
+  DefaultTheme,
+  NavigationContainer,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import LoggedInNav from './navigators/LoggedInNav.tsx';
 import LoggedOutNav from './navigators/LoggedOutNav.tsx';
 import {apolloDevToolsInit} from 'react-native-apollo-devtools-client';
 import {loadErrorMessages, loadDevMessages} from '@apollo/client/dev';
+import {useFlipper} from '@react-navigation/devtools';
 
 function App(): React.JSX.Element | null {
   const [ready, setReady] = useState<boolean>(false);
   const colorMode: 'light' | 'dark' = useReactiveVar(colorModeVar);
   const isLoggedIn: boolean = useReactiveVar(isLoggedInVar);
+  const navigationRef = useNavigationContainerRef();
+  useFlipper(navigationRef);
 
   const preload = async (): Promise<boolean> => {
     const token = await AsyncStorage.getItem('token');
@@ -75,7 +82,7 @@ function App(): React.JSX.Element | null {
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={colorMode === 'light' ? lightTheme : darkTheme}>
-        <NavigationContainer theme={MyTheme}>
+        <NavigationContainer theme={MyTheme} ref={navigationRef}>
           {isLoggedIn ? <LoggedInNav /> : <LoggedOutNav />}
         </NavigationContainer>
       </ThemeProvider>

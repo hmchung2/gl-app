@@ -3,6 +3,7 @@ import {EditProfileProps} from '../screens/EditProfile.tsx';
 
 export type RootStackParamList = {
   Chats: any;
+  Profile: any;
   TabNav: any;
   StackLogin: {username: string; password: string} | undefined;
   Welcome: any;
@@ -26,6 +27,7 @@ export type RootStackParamList = {
   StackMessagesNav: undefined;
   SimpleProfile: {id: number; username: string};
   StackPhoto: {photoUrl: string};
+  Alarms: any;
 };
 
 export interface User {

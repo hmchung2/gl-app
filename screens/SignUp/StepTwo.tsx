@@ -1,5 +1,5 @@
 import React, {useEffect, useContext, useState} from 'react';
-import {SignUpAppContext} from './SignUpContext';
+import {SignUpAppContext} from '../../hooks/SignUpContext.tsx';
 import AuthButton from '../../components/auth/AuthButton';
 import AuthLayout from '../../components/auth/AuthLayout';
 import styled, {css} from 'styled-components/native';

@@ -175,6 +175,8 @@ export default function SimpleProfile({
     }
   }, []);
 
+  console.log('navigation >>>', navigation);
+
   const {data: seeProfileData, loading: seeProfileLoading} =
     useSeeSimpleProfileQuery({
       variables: {seeProfileId: id},

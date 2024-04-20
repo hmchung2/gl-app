@@ -170,19 +170,6 @@ export default function EachRoom({route, navigation}: RoomProps) {
 
   const client = useApolloClient();
 
-  // const onMessageRead = async (messageId: number) => {
-  //   try {
-  //     const { data: { readMessage: { ok, error } = {} } = {} } =
-  //       await readMessage({ variables: { id: messageId } });
-
-  //     if (!ok) {
-  //       console.error(`Failed to mark message as read: ${error}`);
-  //     }
-  //   } catch (error) {
-  //     console.error(`Failed to mark message as read: ${error.message}`);
-  //   }
-  // };
-
   const onMessageRead = async (messageId: number) => {
     try {
       const {data} = await readMessage({

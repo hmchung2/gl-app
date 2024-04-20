@@ -6,7 +6,7 @@ import {TextInput} from '../../components/auth/AuthShared';
 import {format} from 'date-fns';
 import AuthLayout from '../../components/auth/AuthLayout';
 import AuthButton from '../../components/auth/AuthButton';
-import {SignUpAppContext} from './SignUpContext';
+import {SignUpAppContext} from '../../hooks/SignUpContext.tsx';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   CreateAccountValidPage,

@@ -5,7 +5,7 @@ import AuthLayout from '../../components/auth/AuthLayout';
 import AuthButton from '../../components/auth/AuthButton';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useForm} from 'react-hook-form';
-import {SignUpAppContext} from './SignUpContext';
+import {SignUpAppContext} from '../../hooks/SignUpContext.tsx';
 import {ReactNativeFile} from 'apollo-upload-client';
 import {
   CreateAccountMutation,

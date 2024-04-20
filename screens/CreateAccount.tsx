@@ -4,7 +4,7 @@ import StepOne from './SignUp/StepOne';
 import StepTwo from './SignUp/StepTwo';
 import StepThree from './SignUp/StepThree';
 import StepFour from './SignUp/StepFour';
-import {SignUpAppContextProvider} from './SignUp/SignUpContext';
+import {SignUpAppContextProvider} from '../hooks/SignUpContext.tsx';
 import {TouchableOpacity, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ConditionStep from './SignUp/ConditionStep';

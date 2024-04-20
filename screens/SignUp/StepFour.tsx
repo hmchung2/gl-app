@@ -6,7 +6,7 @@ import AuthButton from '../../components/auth/AuthButton';
 import styled from 'styled-components/native';
 import {colors} from '../../colors';
 import StepBar from './StepBar';
-import {SignUpAppContext} from './SignUpContext';
+import {SignUpAppContext} from '../../hooks/SignUpContext.tsx';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   CreateAccountValidPage,

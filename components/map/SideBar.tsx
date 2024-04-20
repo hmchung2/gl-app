@@ -70,8 +70,11 @@ const SideBar = ({
     //   params: {id, username},
     // });
     navigation.navigate('StackProfileNav', {
-      id,
-      username,
+      screen: 'SimpleProfile',
+      params: {
+        id: id,
+        username: username,
+      },
     });
   };
 

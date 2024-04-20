@@ -4,7 +4,7 @@ import AuthButton from '../../components/auth/AuthButton';
 import AuthLayout from '../../components/auth/AuthLayout';
 import {TextInput} from '../../components/auth/AuthShared';
 import StepBar from './StepBar';
-import {SignUpAppContext} from './SignUpContext';
+import {SignUpAppContext} from '../../hooks/SignUpContext.tsx';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   CreateAccountValidPage,

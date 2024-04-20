@@ -35,12 +35,12 @@ export const logUserOut = async (): Promise<void> => {
 };
 
 const uploadHttpLink: ApolloLink = createUploadLink({
-  uri: 'https://e19e-220-117-216-225.ngrok-free.app/graphql',
+  uri: 'https://accd-116-47-117-210.ngrok-free.app/graphql',
 });
 
 const wsLink: GraphQLWsLink = new GraphQLWsLink(
   createClient({
-    url: 'ws://e19e-220-117-216-225.ngrok-free.app/graphql',
+    url: 'ws://accd-116-47-117-210.ngrok-free.app/graphql',
     connectionParams: () => {
       return {
         token: tokenVar(),
@@ -103,3 +103,8 @@ const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
 });
 
 export default client;
+
+// https://rsns-uploads-prod.s3.ap-northeast-2.amazonaws.com/avatars/user01-1712681997358-user01-avatar.jpg
+// https://rsns-uploads-prod.s3.ap-northeast-2.amazonaws.com/avatars/normalcat.jpeg
+// https://rsns-uploads-prod.s3.ap-northeast-2.amazonaws.com/avatars/glawdys-hodiesne-sans-titre-1.jpg
+// https://rsns-uploads-prod.s3.ap-northeast-2.amazonaws.com/avatars/toughcat.jpg
