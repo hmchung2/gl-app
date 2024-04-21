@@ -1,11 +1,19 @@
 import {gql} from 'graphql-tag';
 
 gql`
-  query ReadAlarms($page: Int) {
-    readAlarms(page: $page) {
-      id
-      msg
-      read
+  query ReadAlarms($cursor: Int) {
+    readAlarms(cursor: $cursor) {
+      alarms {
+        id
+        msg
+        read
+        updatedAt
+        createdAt
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
 `;

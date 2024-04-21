@@ -36,6 +36,14 @@ export type Alarms = {
   new: Scalars['Boolean']['output'];
 };
 
+export type FollowUserResponse = {
+  __typename?: 'FollowUserResponse';
+  error?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  mutualFollow?: Maybe<Scalars['Boolean']['output']>;
+  ok: Scalars['Boolean']['output'];
+};
+
 export type Location = {
   __typename?: 'Location';
   isFollowing: Scalars['Boolean']['output'];
@@ -79,7 +87,7 @@ export type Mutation = {
   deleteFreeze: MutationResponse;
   deletePhoto: MutationResponse;
   editProfile: MutationResponse;
-  followUser: MutationResponse;
+  followUser: FollowUserResponse;
   freezeMoment: MutationResponse;
   login: LoginResult;
   readAlarm: MutationResponse;
@@ -193,6 +201,12 @@ export type MutationResponse = {
   ok: Scalars['Boolean']['output'];
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['Int']['output']>;
+  hasNextPage: Scalars['Boolean']['output'];
+};
+
 export type Photo = {
   __typename?: 'Photo';
   file: Scalars['String']['output'];
@@ -205,7 +219,7 @@ export type Query = {
   checkUnreadAlarm: Scalars['Boolean']['output'];
   initMap?: Maybe<Array<Maybe<Location>>>;
   me?: Maybe<User>;
-  readAlarms: Array<Alarm>;
+  readAlarms: ReadAlarmsResponse;
   searchUsers: Array<Maybe<User>>;
   seeFollowers: SeeFollowersResult;
   seeFollowing: SeeFollowingResult;
@@ -226,7 +240,7 @@ export type QueryInitMapArgs = {
 
 
 export type QueryReadAlarmsArgs = {
-  page?: InputMaybe<Scalars['Int']['input']>;
+  cursor?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -275,6 +289,12 @@ export type QueryValidCreateAccountArgs = {
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ReadAlarmsResponse = {
+  __typename?: 'ReadAlarmsResponse';
+  alarms?: Maybe<Array<Alarm>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
 export type Room = {
   __typename?: 'Room';
   createdAt: Scalars['String']['output'];
@@ -287,6 +307,7 @@ export type Room = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  alarmUpdates?: Maybe<Alarm>;
   mapUpdates: Location;
   roomUpdates?: Maybe<Message>;
 };
@@ -384,7 +405,7 @@ export type FollowUserMutationVariables = Exact<{
 }>;
 
 
-export type FollowUserMutation = { __typename?: 'Mutation', followUser: { __typename?: 'MutationResponse', error?: string | null, ok: boolean, id?: number | null } };
+export type FollowUserMutation = { __typename?: 'Mutation', followUser: { __typename?: 'FollowUserResponse', error?: string | null, ok: boolean, id?: number | null } };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String']['input'];
@@ -431,11 +452,11 @@ export type CheckUnreadAlarmQueryVariables = Exact<{ [key: string]: never; }>;
 export type CheckUnreadAlarmQuery = { __typename?: 'Query', checkUnreadAlarm: boolean };
 
 export type ReadAlarmsQueryVariables = Exact<{
-  page?: InputMaybe<Scalars['Int']['input']>;
+  cursor?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type ReadAlarmsQuery = { __typename?: 'Query', readAlarms: Array<{ __typename?: 'Alarm', id: number, msg: string, read: boolean }> };
+export type ReadAlarmsQuery = { __typename?: 'Query', readAlarms: { __typename?: 'ReadAlarmsResponse', alarms?: Array<{ __typename?: 'Alarm', id: number, msg: string, read: boolean, updatedAt: string, createdAt: string }> | null, pageInfo?: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: number | null } | null } };
 
 export type SeeFollowingQueryVariables = Exact<{
   page: Scalars['Int']['input'];
@@ -487,6 +508,11 @@ export type ValidCreateAccountQueryVariables = Exact<{
 
 
 export type ValidCreateAccountQuery = { __typename?: 'Query', validCreateAccount: { __typename?: 'validResponse', ok: boolean, error?: string | null, nextPage?: string | null } };
+
+export type AlarmUpdatesSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AlarmUpdatesSubscription = { __typename?: 'Subscription', alarmUpdates?: { __typename?: 'Alarm', id: number, msg: string, read: boolean, updatedAt: string, userId: number } | null };
 
 export type MapUpdatesSubscriptionVariables = Exact<{
   generalLat: Scalars['Float']['input'];
@@ -806,11 +832,19 @@ export type CheckUnreadAlarmLazyQueryHookResult = ReturnType<typeof useCheckUnre
 export type CheckUnreadAlarmSuspenseQueryHookResult = ReturnType<typeof useCheckUnreadAlarmSuspenseQuery>;
 export type CheckUnreadAlarmQueryResult = Apollo.QueryResult<CheckUnreadAlarmQuery, CheckUnreadAlarmQueryVariables>;
 export const ReadAlarmsDocument = gql`
-    query ReadAlarms($page: Int) {
-  readAlarms(page: $page) {
-    id
-    msg
-    read
+    query ReadAlarms($cursor: Int) {
+  readAlarms(cursor: $cursor) {
+    alarms {
+      id
+      msg
+      read
+      updatedAt
+      createdAt
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
   }
 }
     `;
@@ -827,7 +861,7 @@ export const ReadAlarmsDocument = gql`
  * @example
  * const { data, loading, error } = useReadAlarmsQuery({
  *   variables: {
- *      page: // value for 'page'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */
@@ -1182,6 +1216,39 @@ export type ValidCreateAccountQueryHookResult = ReturnType<typeof useValidCreate
 export type ValidCreateAccountLazyQueryHookResult = ReturnType<typeof useValidCreateAccountLazyQuery>;
 export type ValidCreateAccountSuspenseQueryHookResult = ReturnType<typeof useValidCreateAccountSuspenseQuery>;
 export type ValidCreateAccountQueryResult = Apollo.QueryResult<ValidCreateAccountQuery, ValidCreateAccountQueryVariables>;
+export const AlarmUpdatesDocument = gql`
+    subscription AlarmUpdates {
+  alarmUpdates {
+    id
+    msg
+    read
+    updatedAt
+    userId
+  }
+}
+    `;
+
+/**
+ * __useAlarmUpdatesSubscription__
+ *
+ * To run a query within a React component, call `useAlarmUpdatesSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useAlarmUpdatesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAlarmUpdatesSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAlarmUpdatesSubscription(baseOptions?: Apollo.SubscriptionHookOptions<AlarmUpdatesSubscription, AlarmUpdatesSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<AlarmUpdatesSubscription, AlarmUpdatesSubscriptionVariables>(AlarmUpdatesDocument, options);
+      }
+export type AlarmUpdatesSubscriptionHookResult = ReturnType<typeof useAlarmUpdatesSubscription>;
+export type AlarmUpdatesSubscriptionResult = Apollo.SubscriptionResult<AlarmUpdatesSubscription>;
 export const MapUpdatesDocument = gql`
     subscription MapUpdates($generalLat: Float!, $generalLon: Float!) {
   mapUpdates(generalLat: $generalLat, generalLon: $generalLon) {
