@@ -20,10 +20,15 @@ export type Scalars = {
 
 export type Alarm = {
   __typename?: 'Alarm';
+  alarmImg?: Maybe<Scalars['String']['output']>;
+  alarmType: Scalars['Int']['output'];
   createdAt: Scalars['String']['output'];
+  detail?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   msg: Scalars['String']['output'];
   read: Scalars['Boolean']['output'];
+  seen: Scalars['Boolean']['output'];
+  targetId?: Maybe<Scalars['Int']['output']>;
   updatedAt: Scalars['String']['output'];
   user: User;
   userId: Scalars['Int']['output'];
@@ -456,7 +461,7 @@ export type ReadAlarmsQueryVariables = Exact<{
 }>;
 
 
-export type ReadAlarmsQuery = { __typename?: 'Query', readAlarms: { __typename?: 'ReadAlarmsResponse', alarms?: Array<{ __typename?: 'Alarm', id: number, msg: string, read: boolean, updatedAt: string, createdAt: string }> | null, pageInfo?: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: number | null } | null } };
+export type ReadAlarmsQuery = { __typename?: 'Query', readAlarms: { __typename?: 'ReadAlarmsResponse', alarms?: Array<{ __typename?: 'Alarm', id: number, msg: string, detail?: string | null, read: boolean, seen: boolean, alarmType: number, targetId?: number | null, alarmImg?: string | null, updatedAt: string, createdAt: string }> | null, pageInfo?: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: number | null } | null } };
 
 export type SeeFollowingQueryVariables = Exact<{
   page: Scalars['Int']['input'];
@@ -837,7 +842,12 @@ export const ReadAlarmsDocument = gql`
     alarms {
       id
       msg
+      detail
       read
+      seen
+      alarmType
+      targetId
+      alarmImg
       updatedAt
       createdAt
     }

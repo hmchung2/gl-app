@@ -13,6 +13,7 @@ import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../shared/shared.types.ts';
+import {SeparatorView} from '../flatList/SeparatorView.tsx';
 
 interface SideBarProps {
   currentUsers: User[];
@@ -44,13 +45,6 @@ const SidebarView = styled.View`
   background-color: ${props => props.theme.bgColor};
   flex-direction: row;
   flex: 1;
-`;
-
-const SeparatorView = styled.View`
-  width: 90%;
-  height: 1px;
-  align-self: center;
-  background-color: ${props => props.theme.separatorLineColor};
 `;
 
 type RoomItemNavigationProps = NativeStackNavigationProp<RootStackParamList>;
@@ -97,7 +91,6 @@ const SideBar = ({
 
   return (
     <SidebarView>
-      {/* 사이드바 컨텐츠 */}
       <FlatList
         data={currentUsers}
         renderItem={renderItem}

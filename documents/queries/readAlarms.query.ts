@@ -6,7 +6,12 @@ gql`
       alarms {
         id
         msg
+        detail
         read
+        seen
+        alarmType
+        targetId
+        alarmImg
         updatedAt
         createdAt
       }

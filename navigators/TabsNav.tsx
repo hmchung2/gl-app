@@ -5,18 +5,16 @@ import TabIcon from '../components/nav/TabIcon';
 import {useTheme} from 'styled-components';
 import MapScreen from '../screens/MapScreen';
 import {RootStackParamList} from '../shared/shared.types.ts';
-import StackProfileNav from './StackProfileNav.tsx';
-import Alarms from '../screens/Alarms.tsx';
+import Alarms from '../screens/Alarms/Alarms.tsx';
 import {useNotifications} from '../hooks/NotificiationContext.tsx';
 import {useAlarmUpdatesSubscription} from '../generated/graphql.ts';
-
 const Tabs = createBottomTabNavigator<RootStackParamList>();
 
 export default function TabsNav() {
   const theme = useTheme();
 
-  const {hasUnreadAlarms, setHasUnreadAlarms} = useNotifications();
-  console.log('hasUnreadAlarms >>> ', hasUnreadAlarms);
+  const {hasUnSeenAlarms, setHasUnSeenAlarms} = useNotifications();
+  console.log('hasUnreadAlarms >>> ', hasUnSeenAlarms);
 
   const {
     data: newAlarmData,
@@ -26,7 +24,7 @@ export default function TabsNav() {
 
   useEffect(() => {
     console.log('newAlarmData >>> ', newAlarmData);
-    setHasUnreadAlarms(true);
+    setHasUnSeenAlarms(true);
   }, [newAlarmData]);
 
   return (
@@ -99,6 +97,13 @@ export default function TabsNav() {
               focused={focused}
             />
           ),
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: theme.bgColor,
+          },
+          headerTitleStyle: {
+            color: theme.fontColor,
+          },
         }}
       />
     </Tabs.Navigator>
