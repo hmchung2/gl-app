@@ -1,9 +1,9 @@
 import styled from 'styled-components/native';
-import AvatarImg from '../users/AvatarImg.tsx';
-import {colors} from '../../colors.ts';
 import {Alarm} from '../../generated/graphql.ts';
-import Icon from 'react-native-vector-icons/Ionicons';
-import AlarmListImg from './AlarmListImg.tsx';
+import AlarmItemImg from './AlarmItemImg.tsx';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../shared/shared.types.ts';
 
 interface AlarmItemProps {
   id: number;
@@ -58,26 +58,39 @@ const IconContainer = styled.View<{size: number}>`
   align-items: center;
 `;
 
+const AlarmNavigationMap = {
+  0: 'DefaultAlarmScreen',
+  1: 'GreenLightScreen',
+  2: 'ToBeContinued',
+};
+
+type AlarmItemNavigationProps = NativeStackNavigationProp<RootStackParamList>;
+
 export default function AlarmItem(alarm: Alarm) {
-  console.log(alarm);
+  const navigation = useNavigation<AlarmItemNavigationProps>();
+
   const renderModal = () => {
     console.log('need to write code for rendering modal');
+    switch (alarm.alarmType) {
+      case 1:
+        console.log('ok');
+        navigation.navigate('GreenLightAlarm', {alarm});
+        break;
+      default:
+        console.log('ok2');
+        break;
+    }
   };
 
   return (
     <AlarmContainer onPress={renderModal}>
       <AlarmImgContainer>
-        {alarm.alarmType === 1 ? (
-          <AlarmListImg
-            avatarPath={alarm.alarmImg ? alarm.alarmImg : undefined}
-            size={30}
-            glow={!alarm.seen}
-          />
-        ) : (
-          <IconContainer size={30}>
-            <Icon name={'alarm-outline'} size={20} />
-          </IconContainer>
-        )}
+        <AlarmItemImg
+          alarmType={alarm.alarmType}
+          alarmImgUrl={alarm.alarmImg}
+          size={30}
+          glow={!alarm.read}
+        />
       </AlarmImgContainer>
       <TextContainer>
         <Title>

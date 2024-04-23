@@ -1,4 +1,4 @@
-import {Location} from '../generated/graphql';
+import {Alarm, Location} from '../generated/graphql';
 import {EditProfileProps} from '../screens/EditProfile.tsx';
 
 export type RootStackParamList = {
@@ -28,6 +28,7 @@ export type RootStackParamList = {
   SimpleProfile: {id: number; username: string};
   StackPhoto: {photoUrl: string};
   Alarms: any;
+  GreenLightAlarm: {alarm: Alarm};
 };
 
 export interface User {

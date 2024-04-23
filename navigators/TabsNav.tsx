@@ -1,20 +1,19 @@
 import React, {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import EmptyScreen from '../screens/EmptyScreen';
-import TabIcon from '../components/nav/TabIcon';
+import TabIcon from '../components/icon/TabIcon.tsx';
 import {useTheme} from 'styled-components';
 import MapScreen from '../screens/MapScreen';
 import {RootStackParamList} from '../shared/shared.types.ts';
 import Alarms from '../screens/Alarms/Alarms.tsx';
 import {useNotifications} from '../hooks/NotificiationContext.tsx';
 import {useAlarmUpdatesSubscription} from '../generated/graphql.ts';
+
 const Tabs = createBottomTabNavigator<RootStackParamList>();
 
 export default function TabsNav() {
   const theme = useTheme();
-
   const {hasUnSeenAlarms, setHasUnSeenAlarms} = useNotifications();
-  console.log('hasUnreadAlarms >>> ', hasUnSeenAlarms);
 
   const {
     data: newAlarmData,
@@ -103,6 +102,12 @@ export default function TabsNav() {
           },
           headerTitleStyle: {
             color: theme.fontColor,
+          },
+          tabBarBadge: hasUnSeenAlarms ? '' : undefined,
+          tabBarBadgeStyle: {
+            height: 14,
+            minWidth: 14,
+            borderRadius: 7,
           },
         }}
       />

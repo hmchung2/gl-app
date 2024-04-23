@@ -44,7 +44,7 @@ export default function Alarms() {
   const renderItem = ({item: alarm}: any) => <AlarmItem {...alarm} />;
 
   return (
-    <ScreenLayout loading={false}>
+    <ScreenLayout loading={alarmLoading}>
       <FlatList
         style={{width: '100%'}}
         data={alarmData?.readAlarms.alarms}
