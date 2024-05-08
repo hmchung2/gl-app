@@ -5,25 +5,14 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../shared/shared.types.ts';
 import {colors} from '../../colors.ts';
 import {useWindowDimensions} from 'react-native';
+import AvatarImg from '../../components/users/AvatarImg.tsx';
+import {ApolloCache, FetchResult, gql, useApolloClient} from '@apollo/client';
+import {useReadAlarmMutation} from '../../generated/graphql.ts';
 
 type greenLightAlarmProps = NativeStackScreenProps<
   RootStackParamList,
   'GreenLightAlarm'
 >;
-
-const Container = styled.View`
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-`;
-
-const CircleImage = styled.Image<{imageSize: number; imageMargin: number}>`
-  width: ${props => props.imageSize}px;
-  height: ${props => props.imageSize}px;
-  border-radius: ${props => props.imageSize / 2}px;
-  margin: 0px ${props => props.imageMargin}px 20px
-    ${props => props.imageMargin}px;
-`;
 
 const ButtonContainer = styled.View`
   flex-direction: row;
@@ -84,23 +73,57 @@ export default function GreenLightAlarm({
   navigation,
   route: {params: alarm},
 }: greenLightAlarmProps) {
-  console.log('arrived here');
-  console.log('alarm >>> ', alarm);
-
   const screenWidth = useWindowDimensions().width;
   const imageSize = screenWidth * 0.8; // 80% of the screen width
-  const imageMargin = (screenWidth - imageSize) / 2; // Center the image horizontally
+  const client = useApolloClient();
+
+  // const updateReadMessage = (
+  //   cache: ApolloCache<any>,
+  //   result: FetchResult<any>,
+  // ) => {
+  //   if (!result.data.readAlarm.ok) {
+  //     console.log('error happened');
+  //     client.cache.modify({
+  //       id: `Alarm:${alarm.alarm.id}`,
+  //       fields: {
+  //         read(currentReadStatus) {
+  //           console.log('currentReadStatus >>> ', currentReadStatus);
+  //           return false;
+  //         },
+  //       },
+  //     });
+  //   }
+  // };
+
+  const [readAlarm] = useReadAlarmMutation({
+    variables: {
+      readAlarmId: alarm.alarm.id,
+    },
+    // update: updateReadMessage,
+  });
+
+  useEffect(() => {
+    if (!alarm.alarm.read) {
+      console.log('need to read alarm');
+      client.cache.modify({
+        id: `Alarm:${alarm.alarm.id}`,
+        fields: {
+          read(currentReadStatus) {
+            console.log('currentReadStatus >>> ', currentReadStatus);
+            return true;
+          },
+        },
+      });
+      readAlarm()
+        .then(r => console.log(r))
+        .catch(error => console.log(error));
+    }
+  }, [alarm.alarm.read]);
 
   return (
     <ScreenLayout loading={false}>
-      <CircleImage
-        imageSize={imageSize}
-        imageMargin={imageMargin}
-        source={{
-          uri: 'https://rsns-uploads-prod.s3.ap-northeast-2.amazonaws.com/avatars/normalcat.jpeg',
-        }}
-      />
-      <ExplainText>Congrat!!!</ExplainText>
+      <AvatarImg avatarPath={alarm.alarm.alarmImg} size={imageSize} />
+      <ExplainText>Congrats!!!</ExplainText>
       <SubExplainText>{alarm.alarm.detail}</SubExplainText>
       <ButtonContainer>
         <LeftStyledButton onPress={() => console.log('Button 1 pressed')}>

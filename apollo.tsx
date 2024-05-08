@@ -12,7 +12,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createUploadLink} from 'apollo-upload-client';
 import {createClient} from 'graphql-ws';
 import {GraphQLWsLink} from '@apollo/client/link/subscriptions';
-import {getMainDefinition} from '@apollo/client/utilities';
+import {
+  getMainDefinition,
+  offsetLimitPagination,
+} from '@apollo/client/utilities';
 import {FragmentDefinitionNode, OperationDefinitionNode} from 'graphql';
 import {LocationRoom} from './generated/graphql.ts';
 
@@ -35,12 +38,12 @@ export const logUserOut = async (): Promise<void> => {
 };
 
 const uploadHttpLink: ApolloLink = createUploadLink({
-  uri: 'https://747a-182-227-107-175.ngrok-free.app/graphql',
+  uri: 'https://a193-182-227-107-175.ngrok-free.app/graphql',
 });
 
 const wsLink: GraphQLWsLink = new GraphQLWsLink(
   createClient({
-    url: 'ws://747a-182-227-107-175.ngrok-free.app/graphql',
+    url: 'ws://a193-182-227-107-175.ngrok-free.app/graphql',
     connectionParams: () => {
       return {
         token: tokenVar(),
@@ -83,6 +86,17 @@ const splitLink: ApolloLink = split(
   wsLink,
   httpLinks,
 );
+
+// export const cache = new InMemoryCache({
+//   typePolicies: {
+//     Query: {
+//       fields: {
+//         seeFeed: offsetLimitPagination(),
+//       },
+//     },
+//   },
+// });
+
 export const cache = new InMemoryCache({
   typePolicies: {
     Query: {

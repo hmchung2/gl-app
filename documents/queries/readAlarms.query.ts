@@ -1,9 +1,11 @@
 import {gql} from 'graphql-tag';
 
 gql`
-  query ReadAlarms($cursor: Int) {
-    readAlarms(cursor: $cursor) {
-      alarms {
+  query ReadAlarms($offset: Int!) {
+    readAlarms(offset: $offset) {
+      id
+      endPage
+      result {
         id
         msg
         detail
@@ -14,10 +16,6 @@ gql`
         alarmImg
         updatedAt
         createdAt
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
       }
     }
   }

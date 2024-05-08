@@ -8,12 +8,25 @@ import {RootStackParamList} from '../shared/shared.types.ts';
 import Alarms from '../screens/Alarms/Alarms.tsx';
 import {useNotifications} from '../hooks/NotificiationContext.tsx';
 import {useAlarmUpdatesSubscription} from '../generated/graphql.ts';
+import {gql} from '@apollo/client';
 
 const Tabs = createBottomTabNavigator<RootStackParamList>();
+
+const ALARM_FRAGMENT = gql`
+  fragment AlarmDetails on Alarm {
+    id
+    msg
+    read
+    updatedAt
+    userId
+    __typename
+  }
+`;
 
 export default function TabsNav() {
   const theme = useTheme();
   const {hasUnSeenAlarms, setHasUnSeenAlarms} = useNotifications();
+  console.log('hasUnSeenAlarms >>> ', hasUnSeenAlarms);
 
   const {
     data: newAlarmData,
@@ -21,10 +34,26 @@ export default function TabsNav() {
     error: newAlarmError,
   } = useAlarmUpdatesSubscription();
 
+  console.log('newAlarmData >>> ', newAlarmData);
+
   useEffect(() => {
     console.log('newAlarmData >>> ', newAlarmData);
-    setHasUnSeenAlarms(true);
+    if (newAlarmData != undefined) {
+      setHasUnSeenAlarms(true);
+    }
   }, [newAlarmData]);
+
+  // __typename: "Alarm"
+  // alarmImg: https://rsns-uploads-prod.s3.ap-northeast-2.amazonaws.com/avatars/normalcat.jpeg
+  //   alarmType: 1
+  // createdAt: "1713707029709"
+  // detail: "You have a green light with origin03"
+  // id: 14
+  // msg: "Green Light!"
+  // read: true
+  // seen: true
+  // targetId: 6
+  // updatedAt: "1714134739981"
 
   return (
     <Tabs.Navigator

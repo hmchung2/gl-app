@@ -13,7 +13,6 @@ interface AlarmItemProps {
 }
 
 const AlarmContainer = styled.TouchableOpacity`
-  flex: 1;
   flex-direction: row;
   padding: 8px 10px;
   align-items: center;
@@ -88,7 +87,7 @@ export default function AlarmItem(alarm: Alarm) {
         <AlarmItemImg
           alarmType={alarm.alarmType}
           alarmImgUrl={alarm.alarmImg}
-          size={30}
+          size={50}
           glow={!alarm.read}
         />
       </AlarmImgContainer>
@@ -103,3 +102,24 @@ export default function AlarmItem(alarm: Alarm) {
     </AlarmContainer>
   );
 }
+
+// const FEED_QUERY = gql`
+//   query seeFeed($offset: Int!) {
+//     seeFeed(offset: $offset) {
+//       ...PhotoFragment
+//       user {
+//         id
+//         username
+//         avatar
+//       }
+//       caption
+//       comments {
+//         ...CommentFragment
+//       }
+//       createdAt
+//       isMine
+//     }
+//   }
+//   ${PHOTO_FRAGMENT}
+//   ${COMMENT_FRAGMENT}
+// `;

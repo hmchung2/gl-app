@@ -3,9 +3,31 @@ import ScreenLayout from '../../components/ScreenLayout.tsx';
 import {FlatList} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {useNotifications} from '../../hooks/NotificiationContext.tsx';
-import {useReadAlarmsQuery} from '../../generated/graphql.ts';
+import {useSeeAlarmsMutation} from '../../generated/graphql.ts';
 import AlarmItem from '../../components/alarm/AlarmItem.tsx';
 import {SeparatorView} from '../../components/flatList/SeparatorView.tsx';
+import {gql, useQuery} from '@apollo/client';
+
+const SEE_ALARMS_MY_QUERY = gql`
+  query ReadAlarms($offset: Int!) {
+    readAlarms(offset: $offset) {
+      id
+      endPage
+      result {
+        id
+        msg
+        detail
+        read
+        seen
+        alarmType
+        targetId
+        alarmImg
+        updatedAt
+        createdAt
+      }
+    }
+  }
+`;
 
 export default function Alarms() {
   const isFocused = useIsFocused();
@@ -17,20 +39,20 @@ export default function Alarms() {
     loading: alarmLoading,
     refetch,
     fetchMore,
-  } = useReadAlarmsQuery();
+  } = useQuery(SEE_ALARMS_MY_QUERY, {
+    variables: {
+      offset: 0,
+    },
+  });
 
-  useEffect(() => {
-    if (alarmData) {
-      console.log(
-        'alarmData.readAlarms.alarms >>> ',
-        alarmData.readAlarms.alarms,
-      );
-    }
-  }, [alarmData]);
+  const [seeAlarms] = useSeeAlarmsMutation();
 
   useEffect(() => {
     console.log('isFocused >>> ', isFocused);
-    if (isFocused) {
+    if (isFocused && hasUnSeenAlarms) {
+      seeAlarms()
+        .then(r => console.log(r))
+        .catch(error => console.log(error));
       setHasUnSeenAlarms(false);
     }
   }, [isFocused]);
@@ -43,15 +65,60 @@ export default function Alarms() {
 
   const renderItem = ({item: alarm}: any) => <AlarmItem {...alarm} />;
 
+  const onEndReached = async () => {
+    // Check if we already have reached the end of the pages
+    if (
+      alarmData?.readAlarms?.result?.length &&
+      !alarmData.readAlarms.endPage
+    ) {
+      console.log(
+        'Fetching more alarms, current offset: ',
+        alarmData.readAlarms.result.length,
+      );
+      setRefreshing(true);
+
+      await fetchMore({
+        variables: {
+          offset: alarmData.readAlarms.result.length,
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          // Combine the old and new alarm results
+          const combinedResult = [
+            ...previousResult.readAlarms.result,
+            ...fetchMoreResult.readAlarms.result,
+          ];
+          return {
+            ...previousResult,
+            readAlarms: {
+              ...previousResult.readAlarms,
+              result: combinedResult,
+              // Update endPage based on the fetched result
+              endPage: fetchMoreResult.readAlarms.endPage,
+            },
+          };
+        },
+      });
+      setRefreshing(false);
+    } else {
+      console.log('End of data reached or already fetching.');
+    }
+  };
+
   return (
     <ScreenLayout loading={alarmLoading}>
       <FlatList
+        onEndReachedThreshold={0.01}
+        onEndReached={onEndReached}
         style={{width: '100%'}}
-        data={alarmData?.readAlarms.alarms}
+        data={alarmData?.readAlarms?.result}
         renderItem={renderItem}
         onRefresh={onRefresh}
         refreshing={refreshing}
         ItemSeparatorComponent={() => <SeparatorView width={'100%'} />}
+        keyExtractor={alarm => '' + alarm.id}
       />
     </ScreenLayout>
   );

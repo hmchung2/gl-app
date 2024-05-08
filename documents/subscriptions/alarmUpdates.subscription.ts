@@ -5,9 +5,14 @@ export const ALARM_UPDATES = gql`
     alarmUpdates {
       id
       msg
+      detail
       read
+      seen
+      alarmType
+      targetId
+      alarmImg
       updatedAt
-      userId
+      createdAt
     }
   }
 `;

@@ -97,6 +97,7 @@ export type Mutation = {
   login: LoginResult;
   readAlarm: MutationResponse;
   readMessage: MutationResponse;
+  seeAlarms: MutationResponse;
   sendMessage: MutationResponse;
   unfollowUser: MutationResponse;
   updateLocation: MutationResponse;
@@ -233,7 +234,6 @@ export type Query = {
   seeRoom?: Maybe<Room>;
   seeRooms?: Maybe<Array<Maybe<Room>>>;
   selectLocations?: Maybe<LocationRoom>;
-  showAlarms?: Maybe<Alarms>;
   validCreateAccount: ValidResponse;
 };
 
@@ -245,7 +245,7 @@ export type QueryInitMapArgs = {
 
 
 export type QueryReadAlarmsArgs = {
-  cursor?: InputMaybe<Scalars['Int']['input']>;
+  offset: Scalars['Int']['input'];
 };
 
 
@@ -296,8 +296,9 @@ export type QueryValidCreateAccountArgs = {
 
 export type ReadAlarmsResponse = {
   __typename?: 'ReadAlarmsResponse';
-  alarms?: Maybe<Array<Alarm>>;
-  pageInfo?: Maybe<PageInfo>;
+  endPage: Scalars['Boolean']['output'];
+  id: Scalars['Int']['output'];
+  result: Array<Alarm>;
 };
 
 export type Room = {
@@ -420,12 +421,24 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginResult', ok: boolean, token?: string | null, error?: string | null } };
 
+export type ReadAlarmMutationVariables = Exact<{
+  readAlarmId: Scalars['Int']['input'];
+}>;
+
+
+export type ReadAlarmMutation = { __typename?: 'Mutation', readAlarm: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } };
+
 export type ReadMessageMutationVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
 export type ReadMessageMutation = { __typename?: 'Mutation', readMessage: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } };
+
+export type SeeAlarmsMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SeeAlarmsMutation = { __typename?: 'Mutation', seeAlarms: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } };
 
 export type SendMessageMutationVariables = Exact<{
   payload: Scalars['String']['input'];
@@ -457,11 +470,11 @@ export type CheckUnreadAlarmQueryVariables = Exact<{ [key: string]: never; }>;
 export type CheckUnreadAlarmQuery = { __typename?: 'Query', checkUnreadAlarm: boolean };
 
 export type ReadAlarmsQueryVariables = Exact<{
-  cursor?: InputMaybe<Scalars['Int']['input']>;
+  offset: Scalars['Int']['input'];
 }>;
 
 
-export type ReadAlarmsQuery = { __typename?: 'Query', readAlarms: { __typename?: 'ReadAlarmsResponse', alarms?: Array<{ __typename?: 'Alarm', id: number, msg: string, detail?: string | null, read: boolean, seen: boolean, alarmType: number, targetId?: number | null, alarmImg?: string | null, updatedAt: string, createdAt: string }> | null, pageInfo?: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: number | null } | null } };
+export type ReadAlarmsQuery = { __typename?: 'Query', readAlarms: { __typename?: 'ReadAlarmsResponse', id: number, endPage: boolean, result: Array<{ __typename?: 'Alarm', id: number, msg: string, detail?: string | null, read: boolean, seen: boolean, alarmType: number, targetId?: number | null, alarmImg?: string | null, updatedAt: string, createdAt: string }> } };
 
 export type SeeFollowingQueryVariables = Exact<{
   page: Scalars['Int']['input'];
@@ -517,7 +530,7 @@ export type ValidCreateAccountQuery = { __typename?: 'Query', validCreateAccount
 export type AlarmUpdatesSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AlarmUpdatesSubscription = { __typename?: 'Subscription', alarmUpdates?: { __typename?: 'Alarm', id: number, msg: string, read: boolean, updatedAt: string, userId: number } | null };
+export type AlarmUpdatesSubscription = { __typename?: 'Subscription', alarmUpdates?: { __typename?: 'Alarm', id: number, msg: string, detail?: string | null, read: boolean, seen: boolean, alarmType: number, targetId?: number | null, alarmImg?: string | null, updatedAt: string, createdAt: string } | null };
 
 export type MapUpdatesSubscriptionVariables = Exact<{
   generalLat: Scalars['Float']['input'];
@@ -658,6 +671,40 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const ReadAlarmDocument = gql`
+    mutation ReadAlarm($readAlarmId: Int!) {
+  readAlarm(id: $readAlarmId) {
+    ok
+    error
+  }
+}
+    `;
+export type ReadAlarmMutationFn = Apollo.MutationFunction<ReadAlarmMutation, ReadAlarmMutationVariables>;
+
+/**
+ * __useReadAlarmMutation__
+ *
+ * To run a mutation, you first call `useReadAlarmMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReadAlarmMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [readAlarmMutation, { data, loading, error }] = useReadAlarmMutation({
+ *   variables: {
+ *      readAlarmId: // value for 'readAlarmId'
+ *   },
+ * });
+ */
+export function useReadAlarmMutation(baseOptions?: Apollo.MutationHookOptions<ReadAlarmMutation, ReadAlarmMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ReadAlarmMutation, ReadAlarmMutationVariables>(ReadAlarmDocument, options);
+      }
+export type ReadAlarmMutationHookResult = ReturnType<typeof useReadAlarmMutation>;
+export type ReadAlarmMutationResult = Apollo.MutationResult<ReadAlarmMutation>;
+export type ReadAlarmMutationOptions = Apollo.BaseMutationOptions<ReadAlarmMutation, ReadAlarmMutationVariables>;
 export const ReadMessageDocument = gql`
     mutation readMessage($id: Int!) {
   readMessage(id: $id) {
@@ -692,6 +739,39 @@ export function useReadMessageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type ReadMessageMutationHookResult = ReturnType<typeof useReadMessageMutation>;
 export type ReadMessageMutationResult = Apollo.MutationResult<ReadMessageMutation>;
 export type ReadMessageMutationOptions = Apollo.BaseMutationOptions<ReadMessageMutation, ReadMessageMutationVariables>;
+export const SeeAlarmsDocument = gql`
+    mutation SeeAlarms {
+  seeAlarms {
+    ok
+    error
+  }
+}
+    `;
+export type SeeAlarmsMutationFn = Apollo.MutationFunction<SeeAlarmsMutation, SeeAlarmsMutationVariables>;
+
+/**
+ * __useSeeAlarmsMutation__
+ *
+ * To run a mutation, you first call `useSeeAlarmsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSeeAlarmsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [seeAlarmsMutation, { data, loading, error }] = useSeeAlarmsMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSeeAlarmsMutation(baseOptions?: Apollo.MutationHookOptions<SeeAlarmsMutation, SeeAlarmsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SeeAlarmsMutation, SeeAlarmsMutationVariables>(SeeAlarmsDocument, options);
+      }
+export type SeeAlarmsMutationHookResult = ReturnType<typeof useSeeAlarmsMutation>;
+export type SeeAlarmsMutationResult = Apollo.MutationResult<SeeAlarmsMutation>;
+export type SeeAlarmsMutationOptions = Apollo.BaseMutationOptions<SeeAlarmsMutation, SeeAlarmsMutationVariables>;
 export const SendMessageDocument = gql`
     mutation sendMessage($payload: String!, $roomId: Int, $userId: Int) {
   sendMessage(payload: $payload, roomId: $roomId, userId: $userId) {
@@ -837,9 +917,11 @@ export type CheckUnreadAlarmLazyQueryHookResult = ReturnType<typeof useCheckUnre
 export type CheckUnreadAlarmSuspenseQueryHookResult = ReturnType<typeof useCheckUnreadAlarmSuspenseQuery>;
 export type CheckUnreadAlarmQueryResult = Apollo.QueryResult<CheckUnreadAlarmQuery, CheckUnreadAlarmQueryVariables>;
 export const ReadAlarmsDocument = gql`
-    query ReadAlarms($cursor: Int) {
-  readAlarms(cursor: $cursor) {
-    alarms {
+    query ReadAlarms($offset: Int!) {
+  readAlarms(offset: $offset) {
+    id
+    endPage
+    result {
       id
       msg
       detail
@@ -850,10 +932,6 @@ export const ReadAlarmsDocument = gql`
       alarmImg
       updatedAt
       createdAt
-    }
-    pageInfo {
-      hasNextPage
-      endCursor
     }
   }
 }
@@ -871,11 +949,11 @@ export const ReadAlarmsDocument = gql`
  * @example
  * const { data, loading, error } = useReadAlarmsQuery({
  *   variables: {
- *      cursor: // value for 'cursor'
+ *      offset: // value for 'offset'
  *   },
  * });
  */
-export function useReadAlarmsQuery(baseOptions?: Apollo.QueryHookOptions<ReadAlarmsQuery, ReadAlarmsQueryVariables>) {
+export function useReadAlarmsQuery(baseOptions: Apollo.QueryHookOptions<ReadAlarmsQuery, ReadAlarmsQueryVariables> & ({ variables: ReadAlarmsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<ReadAlarmsQuery, ReadAlarmsQueryVariables>(ReadAlarmsDocument, options);
       }
@@ -1231,9 +1309,14 @@ export const AlarmUpdatesDocument = gql`
   alarmUpdates {
     id
     msg
+    detail
     read
+    seen
+    alarmType
+    targetId
+    alarmImg
     updatedAt
-    userId
+    createdAt
   }
 }
     `;

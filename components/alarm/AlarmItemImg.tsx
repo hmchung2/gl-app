@@ -65,7 +65,7 @@ export default function AlarmItemImg({
         );
       default:
         return (
-          <DefaultContainer size={30} style={avatarStyle}>
+          <DefaultContainer size={size} style={avatarStyle}>
             <Icon name={'alarm-outline'} size={20} />
           </DefaultContainer>
         );
