@@ -8,18 +8,36 @@ import {RootStackParamList} from '../shared/shared.types.ts';
 import Alarms from '../screens/Alarms/Alarms.tsx';
 import {useNotifications} from '../hooks/NotificiationContext.tsx';
 import {useAlarmUpdatesSubscription} from '../generated/graphql.ts';
-import {gql} from '@apollo/client';
+import {Reference, StoreObject, gql, useApolloClient} from '@apollo/client';
 
 const Tabs = createBottomTabNavigator<RootStackParamList>();
 
 const ALARM_FRAGMENT = gql`
   fragment AlarmDetails on Alarm {
     id
+    __typename
+    alarmImg
+    alarmType
+    createdAt
+    detail
     msg
     read
+    seen
+    targetId
     updatedAt
-    userId
-    __typename
+  }
+`;
+
+const READ_ALARMS_QUERY = gql`
+  query ReadAlarmsResponse {
+    readAlarmsResponse {
+      id
+      __typename
+      endPage
+      result {
+        __ref
+      }
+    }
   }
 `;
 
@@ -27,7 +45,7 @@ export default function TabsNav() {
   const theme = useTheme();
   const {hasUnSeenAlarms, setHasUnSeenAlarms} = useNotifications();
   console.log('hasUnSeenAlarms >>> ', hasUnSeenAlarms);
-
+  const client = useApolloClient();
   const {
     data: newAlarmData,
     loading: newAlarmDataLoading,
@@ -37,23 +55,53 @@ export default function TabsNav() {
   console.log('newAlarmData >>> ', newAlarmData);
 
   useEffect(() => {
-    console.log('newAlarmData >>> ', newAlarmData);
-    if (newAlarmData != undefined) {
-      setHasUnSeenAlarms(true);
-    }
-  }, [newAlarmData]);
+    if (newAlarmData?.alarmUpdates) {
+      const newAlarm = newAlarmData.alarmUpdates;
 
-  // __typename: "Alarm"
-  // alarmImg: https://rsns-uploads-prod.s3.ap-northeast-2.amazonaws.com/avatars/normalcat.jpeg
-  //   alarmType: 1
-  // createdAt: "1713707029709"
-  // detail: "You have a green light with origin03"
-  // id: 14
-  // msg: "Green Light!"
-  // read: true
-  // seen: true
-  // targetId: 6
-  // updatedAt: "1714134739981"
+      // Create a cache ID for the new alarm
+      const newAlarmCacheId = `Alarm:${newAlarm.id}`;
+
+      // Write the new alarm to the cache
+      client.cache.writeFragment({
+        id: newAlarmCacheId,
+        fragment: ALARM_FRAGMENT,
+        data: newAlarm,
+      });
+
+      try {
+        // Modify the existing ReadAlarmsResponse:1 cache entry
+        client.cache.modify({
+          id: 'ReadAlarmsResponse:1', // Directly target the cache entry by its ID
+          fields: {
+            result(existingRefs, {readField}) {
+              // Create a reference to the new alarm using the cache ID
+              const newAlarmRef = client.cache.writeFragment({
+                data: newAlarm,
+                fragment: ALARM_FRAGMENT,
+              });
+
+              // Check if the alarm already exists to prevent duplicates
+              if (
+                existingRefs.some(
+                  (ref: any) => readField('id', ref) === newAlarm.id,
+                )
+              ) {
+                return existingRefs;
+              }
+
+              // Insert the new alarm reference at the beginning of the result array
+              return [newAlarmRef, ...existingRefs];
+            },
+          },
+        });
+
+        // Update the component state or trigger any other side effects
+        setHasUnSeenAlarms(true);
+      } catch (error) {
+        console.error('Error updating the cache for new alarms:', error);
+      }
+    }
+  }, [newAlarmData, client, setHasUnSeenAlarms]);
 
   return (
     <Tabs.Navigator

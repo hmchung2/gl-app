@@ -38,12 +38,12 @@ export const logUserOut = async (): Promise<void> => {
 };
 
 const uploadHttpLink: ApolloLink = createUploadLink({
-  uri: 'https://a193-182-227-107-175.ngrok-free.app/graphql',
+  uri: 'https://d97f-182-227-107-175.ngrok-free.app/graphql',
 });
 
 const wsLink: GraphQLWsLink = new GraphQLWsLink(
   createClient({
-    url: 'ws://a193-182-227-107-175.ngrok-free.app/graphql',
+    url: 'ws://d97f-182-227-107-175.ngrok-free.app/graphql',
     connectionParams: () => {
       return {
         token: tokenVar(),
