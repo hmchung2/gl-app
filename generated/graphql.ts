@@ -88,6 +88,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createAccount: MutationResponse;
   createAlarm: MutationResponse;
+  createRoom: MutationResponse;
   deleteAlarm: MutationResponse;
   deleteFreeze: MutationResponse;
   deletePhoto: MutationResponse;
@@ -120,6 +121,11 @@ export type MutationCreateAccountArgs = {
 
 export type MutationCreateAlarmArgs = {
   msg: Scalars['String']['input'];
+};
+
+
+export type MutationCreateRoomArgs = {
+  targetId: Scalars['Int']['input'];
 };
 
 
@@ -406,6 +412,13 @@ export type CreateAccountMutationVariables = Exact<{
 
 export type CreateAccountMutation = { __typename?: 'Mutation', createAccount: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } };
 
+export type CreateRoomMutationVariables = Exact<{
+  targetId: Scalars['Int']['input'];
+}>;
+
+
+export type CreateRoomMutation = { __typename?: 'Mutation', createRoom: { __typename?: 'MutationResponse', error?: string | null, id?: number | null, ok: boolean } };
+
 export type FollowUserMutationVariables = Exact<{
   followUserId: Scalars['Int']['input'];
 }>;
@@ -468,6 +481,11 @@ export type CheckUnreadAlarmQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CheckUnreadAlarmQuery = { __typename?: 'Query', checkUnreadAlarm: boolean };
+
+export type DetailMeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DetailMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, userType: string, description?: string | null, followersCount: number, followingCount: number, username: string, birthDay: string, avatar?: string | null, sex: string, userStatus?: string | null, instaUsername?: string | null, photos?: Array<{ __typename?: 'Photo', id: number, file: string } | null> | null } | null };
 
 export type ReadAlarmsQueryVariables = Exact<{
   offset: Scalars['Int']['input'];
@@ -600,6 +618,41 @@ export function useCreateAccountMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateAccountMutationHookResult = ReturnType<typeof useCreateAccountMutation>;
 export type CreateAccountMutationResult = Apollo.MutationResult<CreateAccountMutation>;
 export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<CreateAccountMutation, CreateAccountMutationVariables>;
+export const CreateRoomDocument = gql`
+    mutation CreateRoom($targetId: Int!) {
+  createRoom(targetId: $targetId) {
+    error
+    id
+    ok
+  }
+}
+    `;
+export type CreateRoomMutationFn = Apollo.MutationFunction<CreateRoomMutation, CreateRoomMutationVariables>;
+
+/**
+ * __useCreateRoomMutation__
+ *
+ * To run a mutation, you first call `useCreateRoomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateRoomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createRoomMutation, { data, loading, error }] = useCreateRoomMutation({
+ *   variables: {
+ *      targetId: // value for 'targetId'
+ *   },
+ * });
+ */
+export function useCreateRoomMutation(baseOptions?: Apollo.MutationHookOptions<CreateRoomMutation, CreateRoomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateRoomMutation, CreateRoomMutationVariables>(CreateRoomDocument, options);
+      }
+export type CreateRoomMutationHookResult = ReturnType<typeof useCreateRoomMutation>;
+export type CreateRoomMutationResult = Apollo.MutationResult<CreateRoomMutation>;
+export type CreateRoomMutationOptions = Apollo.BaseMutationOptions<CreateRoomMutation, CreateRoomMutationVariables>;
 export const FollowUserDocument = gql`
     mutation FollowUser($followUserId: Int!) {
   followUser(id: $followUserId) {
@@ -916,6 +969,59 @@ export type CheckUnreadAlarmQueryHookResult = ReturnType<typeof useCheckUnreadAl
 export type CheckUnreadAlarmLazyQueryHookResult = ReturnType<typeof useCheckUnreadAlarmLazyQuery>;
 export type CheckUnreadAlarmSuspenseQueryHookResult = ReturnType<typeof useCheckUnreadAlarmSuspenseQuery>;
 export type CheckUnreadAlarmQueryResult = Apollo.QueryResult<CheckUnreadAlarmQuery, CheckUnreadAlarmQueryVariables>;
+export const DetailMeDocument = gql`
+    query DetailMe {
+  me {
+    id
+    userType
+    description
+    followersCount
+    followingCount
+    photos {
+      id
+      file
+    }
+    username
+    birthDay
+    avatar
+    sex
+    userStatus
+    instaUsername
+  }
+}
+    `;
+
+/**
+ * __useDetailMeQuery__
+ *
+ * To run a query within a React component, call `useDetailMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDetailMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDetailMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDetailMeQuery(baseOptions?: Apollo.QueryHookOptions<DetailMeQuery, DetailMeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DetailMeQuery, DetailMeQueryVariables>(DetailMeDocument, options);
+      }
+export function useDetailMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DetailMeQuery, DetailMeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DetailMeQuery, DetailMeQueryVariables>(DetailMeDocument, options);
+        }
+export function useDetailMeSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DetailMeQuery, DetailMeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DetailMeQuery, DetailMeQueryVariables>(DetailMeDocument, options);
+        }
+export type DetailMeQueryHookResult = ReturnType<typeof useDetailMeQuery>;
+export type DetailMeLazyQueryHookResult = ReturnType<typeof useDetailMeLazyQuery>;
+export type DetailMeSuspenseQueryHookResult = ReturnType<typeof useDetailMeSuspenseQuery>;
+export type DetailMeQueryResult = Apollo.QueryResult<DetailMeQuery, DetailMeQueryVariables>;
 export const ReadAlarmsDocument = gql`
     query ReadAlarms($offset: Int!) {
   readAlarms(offset: $offset) {

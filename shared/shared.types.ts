@@ -1,5 +1,4 @@
-import {Alarm, Location} from '../generated/graphql';
-import {EditProfileProps} from '../screens/EditProfile.tsx';
+import {Alarm, DetailMeQuery, Location} from '../generated/graphql';
 
 export type RootStackParamList = {
   Chats: any;
@@ -8,7 +7,7 @@ export type RootStackParamList = {
   StackLogin: {username: string; password: string} | undefined;
   Welcome: any;
   CreateAccount: any;
-  EachRoom: {id: number; talkingTo: User | undefined};
+  EachRoom: {id: number; talkingTo: string | undefined};
   ConditionStep: any;
   StepFour: any;
   StepBar: any;
@@ -16,15 +15,15 @@ export type RootStackParamList = {
   StepTwo: any;
   StepThree: any;
   Rooms: any;
-  MyProfile: undefined;
+  MyProfile: any;
   Map: undefined;
   Matches: undefined;
   StackProfileNav: any;
   StackFollowers: any;
   StackFollowing: any;
   StackProfile: any;
-  StackEditProfile: any;
-  StackMessagesNav: undefined;
+  EditProfile: {editData: DetailMeQuery};
+  StackMessagesNav: any;
   SimpleProfile: {id: number; username: string};
   StackPhoto: {photoUrl: string};
   Alarms: any;

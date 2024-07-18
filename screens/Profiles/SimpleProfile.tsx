@@ -1,14 +1,17 @@
 import {
+  CreateAccountMutation,
+  CreateRoomMutation,
+  useCreateRoomMutation,
   useFollowUserMutation,
   useSeeSimpleProfileQuery,
   useUnfollowUserMutation,
-} from '../generated/graphql.ts';
+} from '../../generated/graphql.ts';
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../shared/shared.types.ts';
-import Loading from '../components/Loading.tsx';
-import AvatarImg from '../components/users/AvatarImg.tsx';
+import {RootStackParamList} from '../../shared/shared.types.ts';
+import Loading from '../../components/Loading.tsx';
+import AvatarImg from '../../components/users/AvatarImg.tsx';
 import {
   ActivityIndicator,
   FlatList,
@@ -17,8 +20,8 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import {colors} from '../colors.ts';
-import {logUserOut} from '../apollo.tsx';
+import {colors} from '../../colors.ts';
+import {logUserOut} from '../../apollo.tsx';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 type SimpleProfileProps = NativeStackScreenProps<
@@ -213,9 +216,34 @@ export default function SimpleProfile({
       </ProfilePhotoContainer>
     );
   };
-  const moveToMessage = (): void => {
-    navigation.navigate('StackMessagesNav');
+
+  const [createRoomMutation, {loading: createRoomLoading}] =
+    useCreateRoomMutation({
+      onCompleted: (data: CreateRoomMutation): void => {
+        const {
+          createRoom: {ok, error, id: roomId},
+        } = data;
+        if (ok && roomId && username) {
+          console.log('roomId ', roomId);
+          navigation.navigate('StackMessagesNav', {
+            screen: 'EachRoom',
+            params: {
+              id: roomId,
+              talkingTo: username,
+            },
+          });
+        }
+      },
+    });
+
+  const moveToMessage = async () => {
+    // navigation.navigate('StackMessagesNav');
+    console.log('id : ', id);
+    console.log('username : ', username);
     // need to work on specific message room
+    return createRoomMutation({variables: {targetId: id}}).catch(error =>
+      console.log(error),
+    );
   };
 
   const originalPhotos = seeProfileData?.seeProfile?.photos || [];
@@ -226,7 +254,7 @@ export default function SimpleProfile({
   }
 
   const calculateAge = (birthTimeStamp: string | undefined) => {
-    if (birthTimeStamp == undefined) {
+    if (birthTimeStamp === undefined) {
       return '???';
     }
     const birthDate = new Date(parseInt(birthTimeStamp, 10));
@@ -270,7 +298,7 @@ export default function SimpleProfile({
       console.log('No user ID found, cannot follow/unfollow');
       return; // Early return if there's no user ID
     }
-    if (followUserLoading === true || unfollowUserLoading === true) {
+    if (followUserLoading || unfollowUserLoading) {
       return;
     }
 
@@ -290,6 +318,9 @@ export default function SimpleProfile({
     }
   };
 
+  console.log('seeProfileData?.seeProfile : ' + seeProfileData?.seeProfile);
+  console.log(seeProfileData?.seeProfile);
+
   return (
     <Container>
       <Modal
@@ -302,7 +333,7 @@ export default function SimpleProfile({
         </ModalBackground>
       </Modal>
 
-      {seeProfileLoading === true ? (
+      {seeProfileLoading ? (
         <Loading />
       ) : (
         <ProfileContainer>
@@ -356,8 +387,19 @@ export default function SimpleProfile({
                     <RightActionText>Log Out</RightActionText>
                   </RightAction>
                 ) : (
-                  <RightAction onPress={moveToMessage} disabled={true}>
-                    <RightActionText>Message</RightActionText>
+                  <RightAction
+                    onPress={moveToMessage}
+                    disabled={
+                      !(
+                        seeProfileData?.seeProfile?.isFollowing &&
+                        seeProfileData?.seeProfile?.isFollower
+                      )
+                    }>
+                    {createRoomLoading ? (
+                      <ActivityIndicator size="small" color="#FFFFFF" />
+                    ) : (
+                      <RightActionText>Message</RightActionText>
+                    )}
                   </RightAction>
                 )}
               </Buttons>

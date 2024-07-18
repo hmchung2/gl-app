@@ -14,9 +14,19 @@ const ME_QUERY = gql`
   }
 `;
 
+interface MeData {
+  me: {
+    id: number;
+    username: string;
+    followingCount: number;
+    followersCount: number;
+    avatar: string | null;
+  };
+}
+
 export default function useMe() {
   const hasToken = useReactiveVar(isLoggedInVar);
-  const {data} = useQuery(ME_QUERY, {
+  const {data} = useQuery<MeData>(ME_QUERY, {
     skip: !hasToken,
   });
   useEffect(() => {

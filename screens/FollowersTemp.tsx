@@ -27,7 +27,7 @@ const Username = styled.Text`
   margin-bottom: 5px;
 `;
 
-const Followers = ({route}: FollowersProps) => {
+const FollowersTemp = ({route}: FollowersProps) => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const {data, refetch} = useSeeFollowersQuery({
@@ -66,4 +66,4 @@ const Followers = ({route}: FollowersProps) => {
   );
 };
 
-export default Followers;
+export default FollowersTemp;

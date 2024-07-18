@@ -17,7 +17,6 @@ import {
   offsetLimitPagination,
 } from '@apollo/client/utilities';
 import {FragmentDefinitionNode, OperationDefinitionNode} from 'graphql';
-import {LocationRoom} from './generated/graphql.ts';
 
 export const isLoggedInVar = makeVar<boolean>(false);
 export const tokenVar = makeVar<string | null>(null);
@@ -38,12 +37,12 @@ export const logUserOut = async (): Promise<void> => {
 };
 
 const uploadHttpLink: ApolloLink = createUploadLink({
-  uri: 'https://d97f-182-227-107-175.ngrok-free.app/graphql',
+  uri: 'https://c531-221-143-244-19.ngrok-free.app/graphql',
 });
 
 const wsLink: GraphQLWsLink = new GraphQLWsLink(
   createClient({
-    url: 'ws://d97f-182-227-107-175.ngrok-free.app/graphql',
+    url: 'ws://c531-221-143-244-19.ngrok-free.app/graphql',
     connectionParams: () => {
       return {
         token: tokenVar(),
@@ -87,16 +86,6 @@ const splitLink: ApolloLink = split(
   httpLinks,
 );
 
-// export const cache = new InMemoryCache({
-//   typePolicies: {
-//     Query: {
-//       fields: {
-//         seeFeed: offsetLimitPagination(),
-//       },
-//     },
-//   },
-// });
-
 export const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -117,8 +106,3 @@ const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
 });
 
 export default client;
-
-// https://rsns-uploads-prod.s3.ap-northeast-2.amazonaws.com/avatars/user01-1712681997358-user01-avatar.jpg
-// https://rsns-uploads-prod.s3.ap-northeast-2.amazonaws.com/avatars/normalcat.jpeg
-// https://rsns-uploads-prod.s3.ap-northeast-2.amazonaws.com/avatars/glawdys-hodiesne-sans-titre-1.jpg
-// https://rsns-uploads-prod.s3.ap-northeast-2.amazonaws.com/avatars/toughcat.jpg

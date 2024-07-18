@@ -201,7 +201,7 @@ export default function EachRoom({route, navigation}: RoomProps) {
             read,
           },
         }) => {
-          if (!read && username == route?.params?.talkingTo?.username) {
+          if (!read && username == route?.params?.talkingTo) {
             onMessageRead(id);
           }
         },
@@ -273,14 +273,14 @@ export default function EachRoom({route, navigation}: RoomProps) {
   useEffect(() => {
     console.log('route : ', route);
     navigation.setOptions({
-      title: `${route?.params?.talkingTo?.username}`,
+      title: `${route?.params?.talkingTo ? route.params.talkingTo : 'Chat'}`,
     });
     console.log('set completed');
   }, []);
 
   const renderItem = ({item: message}: any) => (
     <MessageContainer
-      outGoing={message.user.username !== route?.params?.talkingTo?.username}>
+      outGoing={message.user.username !== route?.params?.talkingTo}>
       <Author>
         {message.user.avatar ? (
           <Avatar source={{uri: message.user.avatar}} />

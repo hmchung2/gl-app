@@ -9,6 +9,10 @@ import Alarms from '../screens/Alarms/Alarms.tsx';
 import {useNotifications} from '../hooks/NotificiationContext.tsx';
 import {useAlarmUpdatesSubscription} from '../generated/graphql.ts';
 import {Reference, StoreObject, gql, useApolloClient} from '@apollo/client';
+import StackProfileNav from './StackProfileNav.tsx';
+import useMe from '../hooks/useMe.tsx';
+import {Tab} from 'react-native-elements';
+import MyProfile from '../screens/Profiles/MyProfile.tsx';
 
 const Tabs = createBottomTabNavigator<RootStackParamList>();
 
@@ -45,6 +49,9 @@ export default function TabsNav() {
   const theme = useTheme();
   const {hasUnSeenAlarms, setHasUnSeenAlarms} = useNotifications();
   console.log('hasUnSeenAlarms >>> ', hasUnSeenAlarms);
+
+  const meData = useMe();
+
   const client = useApolloClient();
   const {
     data: newAlarmData,
@@ -135,6 +142,19 @@ export default function TabsNav() {
           tabBarIcon: ({focused, color}) => (
             <TabIcon
               iconName={'map'}
+              color={theme.fontColor}
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="MyProfile"
+        component={MyProfile}
+        options={{
+          tabBarIcon: ({focused, color}) => (
+            <TabIcon
+              iconName={'person'}
               color={theme.fontColor}
               focused={focused}
             />

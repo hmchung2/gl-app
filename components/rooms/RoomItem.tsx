@@ -50,22 +50,22 @@ export default function RoomItem({users, unreadTotal, id}: RoomItemProps) {
 
   const navigation = useNavigation<RoomItemNavigationProps>();
 
-  const talkingTo: User = users.find(
+  const targetUser: User = users.find(
     user => user.username !== meData?.me?.username,
   )!;
 
   const goToRoom = () =>
     navigation.navigate('EachRoom', {
       id: id,
-      talkingTo: talkingTo,
+      talkingTo: targetUser.username,
     });
 
   return (
     <RoomContainer onPress={goToRoom}>
       <Column>
-        <AvatarImg avatarPath={talkingTo?.avatar} />
+        <AvatarImg avatarPath={targetUser?.avatar} />
         <Data>
-          <Username>{talkingTo?.username}</Username>
+          <Username>{targetUser?.username}</Username>
           <UnreadText>
             {unreadTotal} unread {unreadTotal === 1 ? 'message' : 'messages'}
           </UnreadText>
