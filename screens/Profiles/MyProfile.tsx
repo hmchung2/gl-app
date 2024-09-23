@@ -10,7 +10,10 @@ import {
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../shared/shared.types.ts';
+import {
+  NonNullableDetailMeQuery,
+  RootStackParamList,
+} from '../../shared/shared.types.ts';
 import Loading from '../../components/Loading.tsx';
 import AvatarImg from '../../components/users/AvatarImg.tsx';
 import {
@@ -24,6 +27,7 @@ import {
 import {colors} from '../../colors.ts';
 import {logUserOut} from '../../apollo.tsx';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {calculateAge} from '../../hooks/Utils.tsx';
 
 type SimpleProfileProps = NativeStackScreenProps<
   RootStackParamList,
@@ -44,8 +48,7 @@ const ModalBackground = styled(TouchableOpacity)`
 
 const ZoomedPhoto = styled(Image)`
   width: 80%;
-  height: 80%;
-  resize-mode: contain;
+  height: 50%;
 `;
 
 const PostContainer = styled.View``;
@@ -168,7 +171,7 @@ export default function MyProfile({navigation}: SimpleProfileProps) {
 
   console.log('navigation >>>', navigation);
 
-  const {data: meData, loading: meLoading} = useDetailMeQuery();
+  const {data: meData, loading: meLoading, refetch} = useDetailMeQuery();
 
   console.log('meData : ', meData);
 
@@ -228,27 +231,26 @@ export default function MyProfile({navigation}: SimpleProfileProps) {
     });
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      refetch(); // Trigger refetch when navigating back to this screen
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   const goToEdit = () => {
     console.log('go to edit');
+    // eslint-disable-next-line prettier/prettier
+    const nonNullableMeData: NonNullableDetailMeQuery = meData as NonNullableDetailMeQuery;
     navigation.navigate('StackProfileNav', {
       screen: 'EditProfile',
-      params: {editData: meData},
+      params: {editData: nonNullableMeData},
     });
   };
 
   const goToMatches = () => {
     console.log('go to matches');
-  };
-
-  const calculateAge = (birthTimeStamp: string | undefined) => {
-    console.log('birthTimeStamp : ', birthTimeStamp);
-    if (birthTimeStamp === undefined) {
-      return '???';
-    }
-    const birthDate = new Date(parseInt(birthTimeStamp, 10));
-    const ageDifMs = Date.now() - birthDate.getTime();
-    const ageDate = new Date(ageDifMs);
-    return Math.abs(ageDate.getUTCFullYear() - 1970);
   };
 
   const [followUserMutation, {loading: followUserLoading}] =

@@ -22,7 +22,7 @@ export type RootStackParamList = {
   StackFollowers: any;
   StackFollowing: any;
   StackProfile: any;
-  EditProfile: {editData: DetailMeQuery};
+  EditProfile: {editData: NonNullableDetailMeQuery};
   StackMessagesNav: any;
   SimpleProfile: {id: number; username: string};
   StackPhoto: {photoUrl: string};
@@ -53,6 +53,11 @@ export interface User {
   userType: string;
   userStatus?: string;
 }
+
+export type NonNullableDetailMeQuery = {
+  __typename: 'Query';
+  me: NonNullable<DetailMeQuery['me']>;
+};
 
 export interface Photo {
   id: number;

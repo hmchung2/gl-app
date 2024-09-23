@@ -1,0 +1,17 @@
+const CommonTextInput = styled.TextInput`
+  font-size: 15px;
+  margin-top: 2px;
+  border-width: 1px;
+  border-color: #ccc;
+  padding: 8px;
+`;
+
+const [description, setDescription] = useState<string>(
+  editData?.me?.description || ''
+);
+
+<CommonTextInput
+  value={description}
+  onChangeText={(text) => setDescription(text)}
+  placeholder="Enter description"
+/>

@@ -103,6 +103,7 @@ export type Mutation = {
   unfollowUser: MutationResponse;
   updateLocation: MutationResponse;
   uploadPhoto?: Maybe<Photo>;
+  uploadPhotos: MutationResponse;
 };
 
 
@@ -146,12 +147,10 @@ export type MutationDeletePhotoArgs = {
 
 export type MutationEditProfileArgs = {
   avatar?: InputMaybe<Scalars['Upload']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  instaUsername?: InputMaybe<Scalars['String']['input']>;
-  interestingSex?: InputMaybe<Scalars['String']['input']>;
-  introduction?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  sex?: InputMaybe<Scalars['String']['input']>;
+  birthDay?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<Scalars['String']['input']>;
+  photos?: InputMaybe<Array<InputMaybe<PhotoInput>>>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -206,6 +205,11 @@ export type MutationUploadPhotoArgs = {
   ufile?: InputMaybe<Scalars['Upload']['input']>;
 };
 
+
+export type MutationUploadPhotosArgs = {
+  ufiles: Array<InputMaybe<Scalars['Upload']['input']>>;
+};
+
 export type MutationResponse = {
   __typename?: 'MutationResponse';
   error?: Maybe<Scalars['String']['output']>;
@@ -224,6 +228,11 @@ export type Photo = {
   file: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   user: User;
+};
+
+export type PhotoInput = {
+  file?: InputMaybe<Scalars['Upload']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Query = {
@@ -419,6 +428,18 @@ export type CreateRoomMutationVariables = Exact<{
 
 export type CreateRoomMutation = { __typename?: 'Mutation', createRoom: { __typename?: 'MutationResponse', error?: string | null, id?: number | null, ok: boolean } };
 
+export type EditProfileMutationVariables = Exact<{
+  username?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<Scalars['String']['input']>;
+  birthDay?: InputMaybe<Scalars['String']['input']>;
+  avatar?: InputMaybe<Scalars['Upload']['input']>;
+  photos?: InputMaybe<Array<InputMaybe<PhotoInput>> | InputMaybe<PhotoInput>>;
+}>;
+
+
+export type EditProfileMutation = { __typename?: 'Mutation', editProfile: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } };
+
 export type FollowUserMutationVariables = Exact<{
   followUserId: Scalars['Int']['input'];
 }>;
@@ -476,6 +497,13 @@ export type UpdateLocationMutationVariables = Exact<{
 
 
 export type UpdateLocationMutation = { __typename?: 'Mutation', updateLocation: { __typename?: 'MutationResponse', id?: number | null, ok: boolean, error?: string | null } };
+
+export type UploadPhotosMutationVariables = Exact<{
+  ufiles: Array<InputMaybe<Scalars['Upload']['input']>> | InputMaybe<Scalars['Upload']['input']>;
+}>;
+
+
+export type UploadPhotosMutation = { __typename?: 'Mutation', uploadPhotos: { __typename?: 'MutationResponse', ok: boolean, error?: string | null } };
 
 export type CheckUnreadAlarmQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -653,6 +681,52 @@ export function useCreateRoomMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateRoomMutationHookResult = ReturnType<typeof useCreateRoomMutation>;
 export type CreateRoomMutationResult = Apollo.MutationResult<CreateRoomMutation>;
 export type CreateRoomMutationOptions = Apollo.BaseMutationOptions<CreateRoomMutation, CreateRoomMutationVariables>;
+export const EditProfileDocument = gql`
+    mutation EditProfile($username: String, $description: String, $gender: String, $birthDay: String, $avatar: Upload, $photos: [PhotoInput]) {
+  editProfile(
+    username: $username
+    description: $description
+    gender: $gender
+    birthDay: $birthDay
+    avatar: $avatar
+    photos: $photos
+  ) {
+    ok
+    error
+  }
+}
+    `;
+export type EditProfileMutationFn = Apollo.MutationFunction<EditProfileMutation, EditProfileMutationVariables>;
+
+/**
+ * __useEditProfileMutation__
+ *
+ * To run a mutation, you first call `useEditProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editProfileMutation, { data, loading, error }] = useEditProfileMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      description: // value for 'description'
+ *      gender: // value for 'gender'
+ *      birthDay: // value for 'birthDay'
+ *      avatar: // value for 'avatar'
+ *      photos: // value for 'photos'
+ *   },
+ * });
+ */
+export function useEditProfileMutation(baseOptions?: Apollo.MutationHookOptions<EditProfileMutation, EditProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditProfileMutation, EditProfileMutationVariables>(EditProfileDocument, options);
+      }
+export type EditProfileMutationHookResult = ReturnType<typeof useEditProfileMutation>;
+export type EditProfileMutationResult = Apollo.MutationResult<EditProfileMutation>;
+export type EditProfileMutationOptions = Apollo.BaseMutationOptions<EditProfileMutation, EditProfileMutationVariables>;
 export const FollowUserDocument = gql`
     mutation FollowUser($followUserId: Int!) {
   followUser(id: $followUserId) {
@@ -932,6 +1006,40 @@ export function useUpdateLocationMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateLocationMutationHookResult = ReturnType<typeof useUpdateLocationMutation>;
 export type UpdateLocationMutationResult = Apollo.MutationResult<UpdateLocationMutation>;
 export type UpdateLocationMutationOptions = Apollo.BaseMutationOptions<UpdateLocationMutation, UpdateLocationMutationVariables>;
+export const UploadPhotosDocument = gql`
+    mutation uploadPhotos($ufiles: [Upload]!) {
+  uploadPhotos(ufiles: $ufiles) {
+    ok
+    error
+  }
+}
+    `;
+export type UploadPhotosMutationFn = Apollo.MutationFunction<UploadPhotosMutation, UploadPhotosMutationVariables>;
+
+/**
+ * __useUploadPhotosMutation__
+ *
+ * To run a mutation, you first call `useUploadPhotosMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadPhotosMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadPhotosMutation, { data, loading, error }] = useUploadPhotosMutation({
+ *   variables: {
+ *      ufiles: // value for 'ufiles'
+ *   },
+ * });
+ */
+export function useUploadPhotosMutation(baseOptions?: Apollo.MutationHookOptions<UploadPhotosMutation, UploadPhotosMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadPhotosMutation, UploadPhotosMutationVariables>(UploadPhotosDocument, options);
+      }
+export type UploadPhotosMutationHookResult = ReturnType<typeof useUploadPhotosMutation>;
+export type UploadPhotosMutationResult = Apollo.MutationResult<UploadPhotosMutation>;
+export type UploadPhotosMutationOptions = Apollo.BaseMutationOptions<UploadPhotosMutation, UploadPhotosMutationVariables>;
 export const CheckUnreadAlarmDocument = gql`
     query CheckUnreadAlarm {
   checkUnreadAlarm
