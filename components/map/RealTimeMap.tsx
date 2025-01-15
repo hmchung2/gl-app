@@ -1,30 +1,22 @@
 import React, {useEffect, useRef, useState} from 'react';
 import MapView, {Marker, Circle, Region} from 'react-native-maps';
 import {customMapStyle} from '../../styles/mapStyle.ts';
-import {
-  ApolloCache,
-  ApolloClient,
-  FetchResult,
-  useApolloClient,
-  useQuery,
-  useSubscription,
-} from '@apollo/client';
+import {ApolloClient, useApolloClient, useQuery} from '@apollo/client';
 import {MAP_UPDATES} from '../../documents/subscriptions/mapUpdates.subscription.ts';
 import {
   Location,
   SelectLocationsQuery,
   UpdateLocationMutation,
   User,
-  useSelectLocationsQuery,
   useUpdateLocationMutation,
 } from '../../generated/graphql.ts';
-import useMe from '../../hooks/useMe.tsx';
 import MapScreenLayout from './MapScreenLayOut.tsx';
 import {LOCATION_FRAGMENT} from '../../fragments.tsx';
 import gql from 'graphql-tag';
 import Geolocation from '@react-native-community/geolocation';
-import {PermissionsAndroid, Platform} from 'react-native';
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {Animated, View, PermissionsAndroid, Platform} from 'react-native';
+import {request, PERMISSIONS} from 'react-native-permissions';
+import {colors} from '../../colors.ts';
 
 interface RealTimeMapProps {
   initialLatitude: number;
@@ -56,6 +48,8 @@ const SEE_LOCATIONS_QUERY = gql`
   ${LOCATION_FRAGMENT}
 `;
 
+const AnimatedMarker = Animated.createAnimatedComponent(Marker);
+
 export default function RealTimeMap({
   initialLatitude,
   initialLongitude,
@@ -65,6 +59,8 @@ export default function RealTimeMap({
   const rerenderThreshHold: number = 0.03;
   const client: ApolloClient<Object> = useApolloClient();
   const [subscribed, setSubscribed] = useState(false);
+
+  const [opacityAnim] = useState(new Animated.Value(1));
 
   const parse = (num: number): number => {
     return parseFloat(num.toFixed(checkingDigits));
@@ -299,6 +295,23 @@ export default function RealTimeMap({
     }
   }, [initialLoading]);
 
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacityAnim, {
+          toValue: 0.3,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  }, [opacityAnim]);
+
   return (
     <MapScreenLayout loading={initialLoading}>
       <MapView
@@ -324,17 +337,22 @@ export default function RealTimeMap({
           locationData.selectLocations.locations.map(location => {
             if (location.lat && location.lon) {
               return (
-                <Circle
+                <AnimatedMarker
                   key={location.userId}
-                  center={{
+                  coordinate={{
                     latitude: location.lat,
                     longitude: location.lon,
                   }}
-                  radius={20}
-                  strokeWidth={2}
-                  strokeColor="blue"
-                  fillColor="rgba(135, 206, 235, 0.5)" // 반투명한 하늘색으로 채우기
-                />
+                  style={{opacity: opacityAnim}}>
+                  <View
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 15,
+                      backgroundColor: colors.green,
+                    }}
+                  />
+                </AnimatedMarker>
               );
             }
           })}

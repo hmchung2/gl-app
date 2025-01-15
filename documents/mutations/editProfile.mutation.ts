@@ -7,7 +7,7 @@ gql`
     $gender: String
     $birthDay: String
     $avatar: Upload
-    $photos: [PhotoInput]
+    $photos: [PhotoInput]!
   ) {
     editProfile(
       username: $username

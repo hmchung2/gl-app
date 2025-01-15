@@ -4,6 +4,7 @@ import AlarmItemImg from './AlarmItemImg.tsx';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../shared/shared.types.ts';
+import React from 'react';
 
 interface AlarmItemProps {
   id: number;

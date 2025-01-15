@@ -7,7 +7,6 @@ import {MATCH_FRAGMENT, ROOM_FRAGMENT} from '../fragments';
 import styled from 'styled-components/native';
 import HList from '../components/users/HList';
 import {Room} from '../generated/graphql.ts';
-import {useTheme} from 'styled-components';
 
 const SEE_ROOMS_QUERY = gql`
   query seeRooms {

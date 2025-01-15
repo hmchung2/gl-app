@@ -57,7 +57,7 @@ const SideBar = ({
 }: SideBarProps) => {
   const navigation = useNavigation<RoomItemNavigationProps>();
 
-  const goToProfile = (id: number, username: string) => {
+  const goToProfile = (id: number) => {
     // Navigate to 'SimpleProfile' screen within 'ProfileStackNav'
     // navigation.navigate('StackProfileNav', {
     //   screen: 'SimpleProfile',
@@ -67,7 +67,6 @@ const SideBar = ({
       screen: 'SimpleProfile',
       params: {
         id: id,
-        username: username,
       },
     });
   };
@@ -75,7 +74,7 @@ const SideBar = ({
   const renderItem = ({item}: RenderItemProps) => {
     console.log('item : ', item);
     return (
-      <TouchableOpacity onPress={() => goToProfile(item.id, item.username)}>
+      <TouchableOpacity onPress={() => goToProfile(item.id)}>
         <Column>
           <AvatarImg
             avatarPath={item.avatar ? item.avatar : undefined}

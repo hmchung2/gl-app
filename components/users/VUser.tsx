@@ -2,10 +2,14 @@ import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
 import AvatarImg from './AvatarImg.tsx';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../../shared/shared.types.ts';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 interface VUserProps {
   avatar: string;
   username: string;
+  id: number;
 }
 
 const Container = styled.View`
@@ -19,10 +23,22 @@ const UserName = styled.Text`
   margin-bottom: 5px;
 `;
 
-export default function VUser({avatar, username}: VUserProps) {
+type RoomItemNavigationProps = NativeStackNavigationProp<RootStackParamList>;
+
+export default function VUser({avatar, username, id}: VUserProps) {
+  const navigation = useNavigation<RoomItemNavigationProps>();
+
+  const goToProfile = () => {
+    navigation.navigate('StackProfileNav', {
+      screen: 'SimpleProfile',
+      params: {
+        id: id,
+      },
+    });
+  };
+
   return (
-    <TouchableOpacity
-      onPress={() => console.log('logs here for rendering profile image')}>
+    <TouchableOpacity onPress={() => goToProfile()}>
       <Container>
         <AvatarImg avatarPath={avatar} />
         <UserName>

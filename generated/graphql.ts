@@ -150,7 +150,7 @@ export type MutationEditProfileArgs = {
   birthDay?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<Scalars['String']['input']>;
-  photos?: InputMaybe<Array<InputMaybe<PhotoInput>>>;
+  photos: Array<InputMaybe<PhotoInput>>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -233,6 +233,8 @@ export type Photo = {
 export type PhotoInput = {
   file?: InputMaybe<Scalars['Upload']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
+  originalFileUrl?: InputMaybe<Scalars['String']['input']>;
+  originalId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Query = {
@@ -434,7 +436,7 @@ export type EditProfileMutationVariables = Exact<{
   gender?: InputMaybe<Scalars['String']['input']>;
   birthDay?: InputMaybe<Scalars['String']['input']>;
   avatar?: InputMaybe<Scalars['Upload']['input']>;
-  photos?: InputMaybe<Array<InputMaybe<PhotoInput>> | InputMaybe<PhotoInput>>;
+  photos: Array<InputMaybe<PhotoInput>> | InputMaybe<PhotoInput>;
 }>;
 
 
@@ -682,7 +684,7 @@ export type CreateRoomMutationHookResult = ReturnType<typeof useCreateRoomMutati
 export type CreateRoomMutationResult = Apollo.MutationResult<CreateRoomMutation>;
 export type CreateRoomMutationOptions = Apollo.BaseMutationOptions<CreateRoomMutation, CreateRoomMutationVariables>;
 export const EditProfileDocument = gql`
-    mutation EditProfile($username: String, $description: String, $gender: String, $birthDay: String, $avatar: Upload, $photos: [PhotoInput]) {
+    mutation EditProfile($username: String, $description: String, $gender: String, $birthDay: String, $avatar: Upload, $photos: [PhotoInput]!) {
   editProfile(
     username: $username
     description: $description

@@ -100,7 +100,7 @@ const LeftActionButtonText = styled.Text`
   color: ${props => props.theme.fontWithThemeBackground};
 `;
 
-const RightAction = styled.TouchableOpacity`
+const RightActionButton = styled.TouchableOpacity`
   background-color: ${props => props.theme.bgContainerColor};
   border: ${props => props.theme.borderColor};
   padding: 5px 12px;
@@ -165,9 +165,10 @@ const GapView = styled.View`
   width: 100%;
 `;
 
-export default function MyProfile({navigation}: SimpleProfileProps) {
+export default function MyProfile({navigation, route}: SimpleProfileProps) {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   console.log('navigation >>>', navigation);
 
@@ -190,6 +191,7 @@ export default function MyProfile({navigation}: SimpleProfileProps) {
     setModalVisible(false);
   };
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const RowSeparator = () => <GapView />;
 
   const renderItem = ({item: photo}: any) => {
@@ -229,15 +231,21 @@ export default function MyProfile({navigation}: SimpleProfileProps) {
         </TouchableOpacity>
       ),
     });
-  }, []);
+  }, [navigation]);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      refetch(); // Trigger refetch when navigating back to this screen
-    });
+    const refreshData = async () => {
+      setIsRefreshing(true);
+      await refetch();
+      setIsRefreshing(false);
+    };
 
-    return unsubscribe;
-  }, [navigation]);
+    if (route.params?.refresh) {
+      refreshData();
+      // Reset the refresh parameter to avoid unnecessary refetches
+      navigation.setParams({refresh: false});
+    }
+  }, [route.params?.refresh, refetch, navigation]);
 
   const goToEdit = () => {
     console.log('go to edit');
@@ -278,7 +286,7 @@ export default function MyProfile({navigation}: SimpleProfileProps) {
           {photoUrl ? <ZoomedPhoto source={{uri: photoUrl}} /> : null}
         </ModalBackground>
       </Modal>
-      {meLoading ? (
+      {meLoading || isRefreshing ? (
         <Loading />
       ) : (
         <ProfileContainer>
@@ -301,9 +309,9 @@ export default function MyProfile({navigation}: SimpleProfileProps) {
                 <LeftActionButton onPress={goToMatches}>
                   <LeftActionButtonText>Matches</LeftActionButtonText>
                 </LeftActionButton>
-                <RightAction onPress={goToEdit}>
+                <RightActionButton onPress={goToEdit}>
                   <RightActionText>Edit Profile</RightActionText>
-                </RightAction>
+                </RightActionButton>
               </Buttons>
             </UserActionContainer>
           </TopContainer>

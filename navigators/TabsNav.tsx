@@ -211,29 +211,3 @@ export default function TabsNav() {
     </Tabs.Navigator>
   );
 }
-
-// {/*그냥 네비게이션 없는 일반 스크린 프로파일 페이지 생성*/}
-// {/*<Tabs.Screen*/}
-// {/*  name="Profile"*/}
-// {/*  component={EmptyScreen}*/}
-// {/*  listeners={({navigation}) => ({*/}
-// {/*    tabPress: event => {*/}
-// {/*      // Prevent the default action (which would be opening the EmptyScreen)*/}
-// {/*      event.preventDefault();*/}
-// {/*      // Navigate to the desired screen instead*/}
-// {/*      navigation.navigate('StackProfileNav', {*/}
-// {/*        id: 4,*/}
-// {/*        username: 'origin01',*/}
-// {/*      });*/}
-// {/*    },*/}
-// {/*  })}*/}
-// {/*  options={{*/}
-// {/*    tabBarIcon: ({focused, color}) => (*/}
-// {/*      <TabIcon*/}
-// {/*        iconName={'person'}*/}
-// {/*        color={theme.fontColor}*/}
-// {/*        focused={focused}*/}
-// {/*      />*/}
-// {/*    ),*/}
-// {/*  }}*/}
-// {/*/>*/}

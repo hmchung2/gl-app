@@ -6,7 +6,7 @@ export const lightTheme: DefaultTheme = {
   fontWithThemeBackground: '#474747',
   placeHolderFontColor: 'rgba(38, 38, 38, 0.6)',
   activeColor: '#0095F6',
-  bgContainerColor: '#3C3C3C',
+  bgContainerColor: '#D3D3D3',
   borderColor: 'black',
   googleLoginColor: 'blue',
   separatorLineColor: 'rgba(38, 38, 38, 0.2)',

@@ -31,20 +31,20 @@ type EditProfileProps = NativeStackScreenProps<
   'EditProfile'
 >;
 
-const PhotoModalBackground = styled.TouchableOpacity`
+const PhotoModalBackground = styled.TouchableOpacity
   flex: 1;
   background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
-`;
+;
 
-const GenderModalBackground = styled.TouchableOpacity`
+const GenderModalBackground = styled.TouchableOpacity
   flex: 1;
   background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
   flex-direction: row;
-`;
+;
 
 interface GenderButtonProps {
   icon: 'mars' | 'venus';
@@ -53,47 +53,47 @@ interface GenderButtonProps {
   isSelected: boolean;
 }
 
-const ZoomedPhoto = styled(Image)`
+const ZoomedPhoto = styled(Image)
   width: 80%;
   height: 50%;
-`;
+;
 
-const ButtonContainer = styled.View`
+const ButtonContainer = styled.View
   flex-direction: row;
   justify-content: space-around;
   width: 100%;
   padding: 10px;
-`;
+;
 
-const InputContainerView = styled.View`
+const InputContainerView = styled.View
   flex-direction: row;
   align-items: center;
-`;
+;
 
-const InputContainerOpacity = styled.TouchableOpacity`
+const InputContainerOpacity = styled.TouchableOpacity
   flex-direction: row;
   align-items: center;
-`;
-const UsernameInput = styled.TextInput`
+;
+const UsernameInput = styled.TextInput
   flex: 1.5;
   padding: 5px;
   font-size: 15px;
   margin-right: 5px;
   color: ${props => props.theme.fontColor};
-`;
+;
 
-const InputText = styled.Text`
+const InputText = styled.Text
   color: ${props => props.theme.fontColor};
   flex: 1.5;
   padding: 5px;
   font-size: 15px;
   margin-right: 5px;
-`;
+;
 
 const GenderButtonOpacity = styled.TouchableOpacity<{
   isSelected: boolean;
   onPress: () => void;
-}>`
+}>
   align-items: center;
   background-color: grey;
   border-radius: 10px;
@@ -103,16 +103,16 @@ const GenderButtonOpacity = styled.TouchableOpacity<{
 
   ${props =>
     props.isSelected &&
-    css`
+    css
       background-color: ${colors.green};
-    `}
-`;
+    }
+;
 
-const GenderIcon = styled(Icon)`
+const GenderIcon = styled(Icon)
   margin-bottom: 10px;
-`;
+;
 
-const GenderButtonLabel = styled.Text<{isSelected: boolean}>`
+const GenderButtonLabel = styled.Text<{isSelected: boolean}>
   color: #fff;
   font-size: 24px;
   font-weight: bold;
@@ -120,19 +120,19 @@ const GenderButtonLabel = styled.Text<{isSelected: boolean}>`
 
   ${props =>
     props.isSelected &&
-    css`
+    css
       color: #000;
-    `}
-`;
+    }
+;
 
-const InputIconContainer = styled.View`
+const InputIconContainer = styled.View
   flex: 0.2;
   border-radius: 5px;
   justify-content: center;
   align-items: center;
-`;
+;
 
-const ValidButton = styled.TouchableOpacity<{disabled: boolean}>`
+const ValidButton = styled.TouchableOpacity<{disabled: boolean}>
   flex: 0.2;
   background-color: ${props =>
     props.disabled ? 'rgba(128, 128, 128, 0.1)' : colors.gray};
@@ -140,16 +140,16 @@ const ValidButton = styled.TouchableOpacity<{disabled: boolean}>`
   border-radius: 5px;
   justify-content: center;
   align-items: center;
-`;
+;
 
-const ValidButtonText = styled.Text<{disabled: boolean}>`
+const ValidButtonText = styled.Text<{disabled: boolean}>
   color: ${props => (props.disabled ? 'rgba(0, 128, 0, 0.6)' : colors.green)};
   font-size: 15px;
   font-weight: 400;
   text-align: center;
-`;
+;
 
-const SaveButton = styled.TouchableOpacity<{disabled: boolean}>`
+const SaveButton = styled.TouchableOpacity<{disabled: boolean}>
   background-color: ${props =>
     props.disabled ? 'rgba(128, 128, 128, 0.5)' : colors.gray};
   padding: 10px 10px;
@@ -158,118 +158,111 @@ const SaveButton = styled.TouchableOpacity<{disabled: boolean}>`
   width: 60%;
   justify-content: center;
   align-items: center;
-`;
+;
 
-const SaveButtonText = styled.Text`
+const SaveButtonText = styled.Text
   color: ${props => colors.green};
   font-size: 16px;
   font-weight: 800; /* Thicker letters */
   text-align: center;
-`;
+;
 
-const ModalButton = styled.TouchableOpacity`
+const ModalButton = styled.TouchableOpacity
   padding: 10px 20px;
   margin: 0 10px;
   border-radius: 5px;
-`;
+  background-color: red;
+;
 
-const GrayModalButton = styled(ModalButton)`
-  background-color: ${props => colors.gray};
-`;
-
-const GreenModalButton = styled(ModalButton)`
-  background-color: ${props => colors.green};
-`;
-
-const ButtonText = styled.Text`
+const ButtonText = styled.Text
   color: ${props => props.theme.fontColor};
   font-size: 16px;
   text-align: center;
-`;
+;
 
-const Container = styled.View`
+const Container = styled.View
   background-color: ${props => props.theme.bgColor};
   flex: 1;
   justify-content: center;
   align-items: center;
-`;
+;
 
-const ProfileContainer = styled.View`
+const ProfileContainer = styled.View
   flex: 1;
   width: 100%;
-`;
+;
 
-const PictureContainer = styled.View`
+const PictureContainer = styled.View
   flex: 1;
   width: 100%;
   justify-content: center;
   align-items: center;
-`;
+;
 
-const EditInfoContainer = styled.View`
+const EditInfoContainer = styled.View
   flex: 3;
   width: 100%;
-`;
+;
 
-const ProfilePhotoContainer = styled.TouchableOpacity<{width: number}>`
+const ProfilePhotoContainer = styled.TouchableOpacity<{width: number}>
   align-items: center;
   justify-content: center;
   width: ${props => props.width / 5}px;
   height: ${props => props.width / 5}px;
   margin: 5px;
-  background-color: ${props => colors.gray};
-`;
+  background-color: gray;
+;
 
-const TopContainer = styled.View`
+const TopContainer = styled.View
   flex: 0.9;
   padding: 0;
   justify-content: center;
   align-items: center;
-`;
+;
 
-const ProfilePhoto = styled.Image<{width: number}>`
+const ProfilePhoto = styled.Image<{width: number}>
   width: ${props => props.width / 5}px;
   height: ${props => props.width / 5}px;
-`;
+;
 
-const GapView = styled.View`
+const GapView = styled.View
   height: 10px;
   width: 100%;
-`;
-const PostContainer = styled.View`
+;
+const PostContainer = styled.View
   width: 100%;
-`;
+;
 
-const AvatarCircle = styled.TouchableOpacity`
+const AvatarCircle = styled.TouchableOpacity
   margin-bottom: 9px;
-`;
+;
 
-const BottomContainer = styled.View`
+const BottomContainer = styled.View
   flex: 2;
   padding: 10px 0 30px;
   align-items: center;
-`;
+;
 
-const BirthModalBackground = styled.TouchableOpacity`
+const BirthModalBackground = styled.TouchableOpacity
   flex: 1;
   background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
-`;
+;
 
-const SaveMessage = styled.Text`
+const SaveMessage = styled.Text
   color: red;
   font-size: 12px;
   margin-top: 0;
   padding-top: 0;
-`;
+;
 
-const ValidationMessage = styled.Text<{isValid: boolean | null}>`
+const ValidationMessage = styled.Text<{isValid: boolean | null}>
   color: ${props => (props.isValid ? 'green' : 'red')};
   font-size: 12px;
   margin-top: 0;
   padding-top: 0;
-`;
+;
 
 interface SimplePhoto {
   file: string | null;
@@ -327,8 +320,6 @@ export default function EditProfile({navigation, route}: EditProfileProps) {
   const [validationMessage, setValidationMessage] = useState<string | null>(
     null,
   );
-
-  const [avatarModalVisible, setAvatarModalVisible] = useState<boolean>(false);
 
   const [saveMessage, setSaveMessage] = useState<string>('');
 
@@ -408,15 +399,6 @@ export default function EditProfile({navigation, route}: EditProfileProps) {
     }
   };
 
-  const avatarClicked = async () => {
-    console.log('avatar : ', avatar);
-    if (avatar !== null) {
-      setAvatarModalVisible(true);
-    } else {
-      await updateAvatar();
-    }
-  };
-
   const [checkDuplicate, {loading: validLoading}] =
     useValidCreateAccountLazyQuery({
       onCompleted: data => {
@@ -491,7 +473,7 @@ export default function EditProfile({navigation, route}: EditProfileProps) {
           console.log('Profile updated successfully');
           setSaveMessage('');
           // You can add navigation or success feedback here
-          navigation.navigate('MyProfile', {refresh: true});
+          navigation.goBack();
         } else {
           console.error('Error updating profile:', data.editProfile.error);
           setSaveMessage('Unknown Error saving profile');
@@ -529,7 +511,7 @@ export default function EditProfile({navigation, route}: EditProfileProps) {
     }
 
     for (let i = 0; i < updatingPhotos.length; i++) {
-      if (updatingPhotos[i].originalFileUrl !== updatingPhotos[i].file) {
+      if (updatingPhotos[i].id !== updatingPhotos[i].originalId) {
         return true;
       }
     }
@@ -560,8 +542,8 @@ export default function EditProfile({navigation, route}: EditProfileProps) {
         file: photo.file
           ? new ReactNativeFile({
               uri: photo.file,
-              type: `image/${fileType}`, // Use the file extension to determine the type
-              name: fileName || `${username}-avatar.jpg`, // Use the original name or generate a new one
+              type: image/${fileType}, // Use the file extension to determine the type
+              name: fileName || ${username}-avatar.jpg, // Use the original name or generate a new one
             })
           : null, // Set to null if there's no file
       };
@@ -572,7 +554,7 @@ export default function EditProfile({navigation, route}: EditProfileProps) {
     if (avatar !== editData.me.avatar) {
       updatedData.avatar = new ReactNativeFile({
         uri: avatar,
-        name: `${username}-avatar.jpg`,
+        name: ${username}-avatar.jpg,
         type: 'image/jpeg',
       });
     }
@@ -613,48 +595,8 @@ export default function EditProfile({navigation, route}: EditProfileProps) {
     setBirthModalVisible(false);
   };
 
-  const updateAvatar = async () => {
-    const options = {
-      mediaType: 'photo',
-      maxWidth: 500,
-      maxHeight: 500,
-      quality: 0.7,
-    };
-    // @ts-ignore
-    const result = await launchImageLibrary(options);
-    if (!result.didCancel && result.assets && result.assets.length > 0) {
-      const selectedAvatarUri = result.assets[0].uri;
-      if (selectedAvatarUri) {
-        setAvatar(selectedAvatarUri);
-      }
-    }
-    setAvatarModalVisible(false);
-  };
-
-  const removeAvatar = () => {
-    setAvatar(null);
-    setAvatarModalVisible(false);
-  };
-
   return (
     <Container>
-      <Modal
-        animationType="fade"
-        visible={avatarModalVisible}
-        transparent={true}
-        onRequestClose={() => setAvatarModalVisible(false)}>
-        <PhotoModalBackground onPress={() => setAvatarModalVisible(false)}>
-          {avatar && <ZoomedPhoto source={{uri: avatar}} />}
-          <ButtonContainer>
-            <GreenModalButton onPress={updateAvatar}>
-              <ButtonText>Update</ButtonText>
-            </GreenModalButton>
-            <GrayModalButton onPress={removeAvatar}>
-              <ButtonText>Remove</ButtonText>
-            </GrayModalButton>
-          </ButtonContainer>
-        </PhotoModalBackground>
-      </Modal>
       <Modal
         animationType="fade"
         visible={photoModalVisible}
@@ -668,12 +610,12 @@ export default function EditProfile({navigation, route}: EditProfileProps) {
           )}
           {updatingPhotos[selectedPhotoIndex].file && (
             <ButtonContainer>
-              <GreenModalButton onPress={() => updatePhoto(selectedPhotoIndex)}>
+              <ModalButton onPress={() => updatePhoto(selectedPhotoIndex)}>
                 <ButtonText>Update</ButtonText>
-              </GreenModalButton>
-              <GrayModalButton onPress={() => removePhoto(selectedPhotoIndex)}>
+              </ModalButton>
+              <ModalButton onPress={() => removePhoto(selectedPhotoIndex)}>
                 <ButtonText>Remove</ButtonText>
-              </GrayModalButton>
+              </ModalButton>
             </ButtonContainer>
           )}
         </PhotoModalBackground>
@@ -716,8 +658,8 @@ export default function EditProfile({navigation, route}: EditProfileProps) {
       <ProfileContainer>
         {!isKeyboardVisible && (
           <TopContainer>
-            <AvatarCircle onPress={avatarClicked}>
-              <AvatarImg avatarPath={avatar} size={100} />
+            <AvatarCircle>
+              <AvatarImg avatarPath={editData.me?.avatar} size={100} />
             </AvatarCircle>
             <PictureContainer>
               <FlatList
@@ -725,7 +667,7 @@ export default function EditProfile({navigation, route}: EditProfileProps) {
                 renderItem={renderItem}
                 numColumns={4}
                 keyExtractor={(item, index) =>
-                  item.id ? String(item.id) : `empty-${index}`
+                  item.id ? String(item.id) : empty-${index}
                 }
                 ItemSeparatorComponent={RowSeparator}
               />
@@ -799,5 +741,460 @@ export default function EditProfile({navigation, route}: EditProfileProps) {
         </BottomContainer>
       </ProfileContainer>
     </Container>
+  );
+}
+
+import {
+  CreateAccountMutation,
+  CreateRoomMutation,
+  useCreateRoomMutation,
+  useDetailMeQuery,
+  useFollowUserMutation,
+  useSeeSimpleProfileQuery,
+  useUnfollowUserMutation,
+} from '../../generated/graphql.ts';
+import React, {useEffect, useState} from 'react';
+import styled from 'styled-components/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  NonNullableDetailMeQuery,
+  RootStackParamList,
+} from '../../shared/shared.types.ts';
+import Loading from '../../components/Loading.tsx';
+import AvatarImg from '../../components/users/AvatarImg.tsx';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Modal,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
+import {colors} from '../../colors.ts';
+import {logUserOut} from '../../apollo.tsx';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {calculateAge} from '../../hooks/Utils.tsx';
+
+type SimpleProfileProps = NativeStackScreenProps<
+  RootStackParamList,
+  'MyProfile'
+>;
+
+const ProfileContainer = styled.View
+  flex: 1;
+  width: 100%;
+;
+
+const ModalBackground = styled(TouchableOpacity)
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+;
+
+const ZoomedPhoto = styled(Image)
+  width: 80%;
+  height: 50%;
+;
+
+const PostContainer = styled.View`;
+
+const UserContainer = styled.View
+  flex-direction: row;
+  width: 100%;
+;
+
+const TopContainer = styled.View
+  padding: 15px 10px 0;
+;
+
+const BottomContainer = styled.View
+  flex: 1;
+  padding: 10px;
+  align-items: center;
+;
+
+const Container = styled.View
+  background-color: ${props => props.theme.bgColor};
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+;
+
+const UserActionContainer = styled.View
+  padding: 13px 10px;
+;
+
+const AgeText = styled.Text
+  font-weight: bold;
+  font-size: 20px;
+;
+
+const LeftActionButton = styled.TouchableOpacity
+  background-color: ${props => colors.green};
+  padding: 5px 12px;
+  border-radius: 5px;
+  flex: 1;
+  margin: 5px;
+  justify-content: center;
+  align-items: center;
+  height: 38px;
+;
+
+const LeftActionButtonText = styled.Text
+  font-weight: bold;
+  color: ${props => props.theme.fontWithThemeBackground};
+;
+
+const RightAction = styled.TouchableOpacity
+  background-color: ${props => props.theme.bgContainerColor};
+  border: ${props => props.theme.borderColor};
+  padding: 5px 12px;
+  border-radius: 5px;
+  flex: 1;
+  margin: 5px;
+  justify-content: center;
+  align-items: center;
+  height: 38px;
+;
+
+const RightActionText = styled.Text
+  font-weight: bold;
+  color: ${props => props.theme.fontWithThemeBackground};
+;
+
+const CommonText = styled.Text
+  font-size: 15px;
+  margin-top: 2px;
+;
+
+const UserInfoContainer = styled.View<{width: number}>
+  flex-direction: row;
+  margin-left: 10px;
+  align-items: center;
+  width: ${props => props.width - 120}px;
+;
+
+const Username = styled.Text
+  font-weight: bold;
+  font-size: 18px;
+;
+
+const AvatarContainer = styled.TouchableOpacity`;
+
+const Bio = styled.Text
+  font-size: 15px;
+  margin-top: 3px;
+;
+
+const Buttons = styled.View
+  flex-direction: row;
+  margin-top: 10px;
+;
+
+const ProfilePhotoContainer = styled.TouchableOpacity<{width: number}>
+  align-items: center;
+  justify-content: center;
+  width: ${props => props.width / 5}px;
+  height: ${props => props.width / 5}px;
+  margin: 5px;
+  background-color: gray; /* For icons, so it matches the photo background if any */
+;
+
+const ProfilePhoto = styled.Image<{width: number}>
+  width: ${props => props.width / 5}px;
+  height: ${props => props.width / 5}px;
+;
+
+const GapView = styled.View
+  height: 10px;
+  width: 100%;
+;
+
+export default function MyProfile({navigation}: SimpleProfileProps) {
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
+  console.log('navigation >>>', navigation);
+
+  const {data: meData, loading: meLoading, refetch} = useDetailMeQuery();
+
+  console.log('meData : ', meData);
+
+  const {width} = useWindowDimensions();
+
+  const photoSize = width / 5;
+
+  const zoomInPhoto = (url: any): void => {
+    if (typeof url === 'string') {
+      setPhotoUrl(url);
+      setModalVisible(true);
+    }
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  const RowSeparator = () => <GapView />;
+
+  const renderItem = ({item: photo}: any) => {
+    if (photo === null) {
+      return (
+        <ProfilePhotoContainer width={width}>
+          <Icon name="person" size={photoSize} color="#ffffff" />
+        </ProfilePhotoContainer>
+      );
+    }
+    return (
+      <ProfilePhotoContainer
+        onPress={() => zoomInPhoto(photo.file)}
+        width={width}>
+        <ProfilePhoto width={width} source={{uri: photo.file}} />
+      </ProfilePhotoContainer>
+    );
+  };
+
+  const originalPhotos = meData?.me?.photos || [];
+  // Ensure the array has exactly 4 items, filling with null for empty spots
+  const preparedPhotos = originalPhotos.slice(0, 4); // Take the first four, if there are more
+  while (preparedPhotos.length < 4) {
+    preparedPhotos.push(null); // Fill with null for empty spots
+  }
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={logUserOut}>
+          <Icon
+            name="exit-outline"
+            size={25}
+            color="white"
+            style={{marginRight: 15}}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      refetch(); // Trigger refetch when navigating back to this screen
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  const goToEdit = () => {
+    console.log('go to edit');
+    // eslint-disable-next-line prettier/prettier
+    const nonNullableMeData: NonNullableDetailMeQuery = meData as NonNullableDetailMeQuery;
+    navigation.navigate('StackProfileNav', {
+      screen: 'EditProfile',
+      params: {editData: nonNullableMeData},
+    });
+  };
+
+  const goToMatches = () => {
+    console.log('go to matches');
+  };
+
+  const [followUserMutation, {loading: followUserLoading}] =
+    useFollowUserMutation({
+      update: (cache, {data}) => {
+        // console.log('follow cache : ', cache);
+        // console.log('follow data : ', data);
+        cache.modify({
+          id: User:{"id":${data?.followUser?.id}},
+          fields: {
+            isFollowing: (isFollowing: boolean) => true,
+          },
+        });
+      },
+    });
+
+  return (
+    <Container>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}>
+        <ModalBackground activeOpacity={1} onPress={closeModal}>
+          {photoUrl ? <ZoomedPhoto source={{uri: photoUrl}} /> : null}
+        </ModalBackground>
+      </Modal>
+      {meLoading ? (
+        <Loading />
+      ) : (
+        <ProfileContainer>
+          <TopContainer>
+            <UserContainer>
+              <AvatarContainer onPress={() => zoomInPhoto(meData?.me?.avatar)}>
+                <AvatarImg avatarPath={meData?.me?.avatar} size={90} />
+              </AvatarContainer>
+              <UserInfoContainer width={width}>
+                <PostContainer>
+                  <CommonText>{meData?.me?.description}</CommonText>
+                </PostContainer>
+              </UserInfoContainer>
+            </UserContainer>
+            <UserActionContainer>
+              <Username>{meData?.me?.username}</Username>
+              <Bio>gender :{meData?.me?.sex == 'F' ? ' Female' : ' Male'}</Bio>
+              <Bio>age : {calculateAge(meData?.me?.birthDay)}</Bio>
+              <Buttons>
+                <LeftActionButton onPress={goToMatches}>
+                  <LeftActionButtonText>Matches</LeftActionButtonText>
+                </LeftActionButton>
+                <RightAction onPress={goToEdit}>
+                  <RightActionText>Edit Profile</RightActionText>
+                </RightAction>
+              </Buttons>
+            </UserActionContainer>
+          </TopContainer>
+          <BottomContainer>
+            <FlatList
+              data={preparedPhotos}
+              renderItem={renderItem}
+              numColumns={4}
+              keyExtractor={(item, index) =>
+                item ? String(item.id) : empty-${index}
+              }
+              ItemSeparatorComponent={RowSeparator}
+            />
+          </BottomContainer>
+        </ProfileContainer>
+      )}
+    </Container>
+  );
+}
+
+
+
+import React, {useRef, useEffect, useState} from 'react';
+import {
+  View,
+  Platform,
+  PermissionsAndroid,
+  DrawerLayoutAndroid,
+} from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
+import RealTimeMap from '../components/map/RealTimeMap.tsx';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import SideBar from '../components/map/SideBar.tsx';
+import {User} from '../generated/graphql.ts';
+import styled from 'styled-components/native';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+
+interface LocationCoords {
+  latitude: number;
+  longitude: number;
+}
+
+const SideBarButton = styled.TouchableOpacity`
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+`;
+
+const SidebarButtonText = styled.Text`
+  font-size: 18px;
+  color: blue;
+`;
+
+export default function MapScreen() {
+  const [initialLocation, setInitialLocation] = useState<LocationCoords | null>(
+    null,
+  );
+  const [currentUsers, setCurrentUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // 추가 데이터 로딩 상태
+
+  const drawerRef = useRef<DrawerLayoutAndroid | null>(null);
+
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      try {
+        let granted;
+        if (Platform.OS === 'ios') {
+          granted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+        } else {
+          granted = await PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+          ]);
+        }
+        Geolocation.getCurrentPosition(
+          position => {
+            console.log('Getting data');
+            setInitialLocation({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          },
+          error => {
+            console.error('Error getting location:', error);
+          },
+        );
+      } catch (err) {
+        console.error('권한 오류:', err); // 구글 API 키 넣어야 함()
+      }
+    };
+    requestLocationPermission();
+  }, []);
+
+  // 스크롤 끝에 도달했을 때 추가 데이터 로드
+  const handleEndReached = () => {
+    if (!isLoading) {
+    }
+  };
+
+  const openSidebar = () => {
+    if (drawerRef.current) {
+      drawerRef.current.openDrawer();
+    } else {
+      console.log('drawerRef.current is null');
+    }
+  };
+
+  // 사이드바 닫기
+  const closeSidebar = () => {
+    if (drawerRef.current) {
+      drawerRef.current.closeDrawer();
+    }
+  };
+  const Drawer = createDrawerNavigator();
+
+  return (
+    <DrawerLayoutAndroid
+      ref={ref => {
+        drawerRef.current = ref;
+      }}
+      drawerWidth={200}
+      drawerPosition={'right'}
+      renderNavigationView={() => (
+        <SideBar
+          currentUsers={currentUsers}
+          isLoading={isLoading}
+          onClose={closeSidebar}
+          onEndReached={handleEndReached}
+        />
+      )}>
+      <View style={{flex: 1}}>
+        {initialLocation && (
+          <RealTimeMap
+            initialLatitude={initialLocation.latitude}
+            initialLongitude={initialLocation.longitude}
+            setCurrentUsers={setCurrentUsers}
+          />
+        )}
+        <SideBarButton onPress={openSidebar}>
+          <SidebarButtonText>{'<'}</SidebarButtonText>
+        </SideBarButton>
+      </View>
+    </DrawerLayoutAndroid>
   );
 }

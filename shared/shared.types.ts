@@ -24,7 +24,7 @@ export type RootStackParamList = {
   StackProfile: any;
   EditProfile: {editData: NonNullableDetailMeQuery};
   StackMessagesNav: any;
-  SimpleProfile: {id: number; username: string};
+  SimpleProfile: {id: number};
   StackPhoto: {photoUrl: string};
   Alarms: any;
   GreenLightAlarm: {alarm: Alarm};

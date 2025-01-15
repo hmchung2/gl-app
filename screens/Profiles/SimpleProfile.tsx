@@ -23,6 +23,7 @@ import {
 import {colors} from '../../colors.ts';
 import {logUserOut} from '../../apollo.tsx';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useTheme} from 'styled-components';
 
 type SimpleProfileProps = NativeStackScreenProps<
   RootStackParamList,
@@ -96,7 +97,7 @@ const LeftActionButtonText = styled.Text`
   color: ${props => props.theme.fontWithThemeBackground};
 `;
 
-const RightAction = styled.TouchableOpacity`
+const RightActionButton = styled.TouchableOpacity`
   background-color: ${props => props.theme.bgContainerColor};
   border: ${props => props.theme.borderColor};
   padding: 5px 12px;
@@ -164,25 +165,25 @@ const GapView = styled.View`
 export default function SimpleProfile({
   navigation,
   route: {
-    params: {id, username},
+    params: {id},
   },
 }: SimpleProfileProps) {
+  const theme = useTheme();
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (username) {
-      navigation.setOptions({
-        headerTitle: `${username}`,
-      });
-    }
-  }, []);
 
   console.log('navigation >>>', navigation);
 
   const {data: seeProfileData, loading: seeProfileLoading} =
     useSeeSimpleProfileQuery({
       variables: {seeProfileId: id},
+      onCompleted: data => {
+        if (data?.seeProfile?.username) {
+          navigation.setOptions({
+            headerTitle: data.seeProfile.username,
+          });
+        }
+      },
     });
 
   const {width} = useWindowDimensions();
@@ -198,6 +199,7 @@ export default function SimpleProfile({
     setModalVisible(false);
   };
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const RowSeparator = () => <GapView />;
 
   const renderItem = ({item: photo}: any) => {
@@ -223,13 +225,13 @@ export default function SimpleProfile({
         const {
           createRoom: {ok, error, id: roomId},
         } = data;
-        if (ok && roomId && username) {
+        if (ok && roomId && seeProfileData?.seeProfile?.username) {
           console.log('roomId ', roomId);
           navigation.navigate('StackMessagesNav', {
             screen: 'EachRoom',
             params: {
               id: roomId,
-              talkingTo: username,
+              talkingTo: seeProfileData.seeProfile.username,
             },
           });
         }
@@ -239,7 +241,6 @@ export default function SimpleProfile({
   const moveToMessage = async () => {
     // navigation.navigate('StackMessagesNav');
     console.log('id : ', id);
-    console.log('username : ', username);
     // need to work on specific message room
     return createRoomMutation({variables: {targetId: id}}).catch(error =>
       console.log(error),
@@ -383,11 +384,11 @@ export default function SimpleProfile({
                   </LeftActionButton>
                 )}
                 {seeProfileData?.seeProfile?.isMe ? (
-                  <RightAction onPress={logUserOut}>
+                  <RightActionButton onPress={logUserOut}>
                     <RightActionText>Log Out</RightActionText>
-                  </RightAction>
+                  </RightActionButton>
                 ) : (
-                  <RightAction
+                  <RightActionButton
                     onPress={moveToMessage}
                     disabled={
                       !(
@@ -396,11 +397,14 @@ export default function SimpleProfile({
                       )
                     }>
                     {createRoomLoading ? (
-                      <ActivityIndicator size="small" color="#FFFFFF" />
+                      <ActivityIndicator
+                        size="small"
+                        color={theme.fontWithThemeBackground}
+                      />
                     ) : (
                       <RightActionText>Message</RightActionText>
                     )}
-                  </RightAction>
+                  </RightActionButton>
                 )}
               </Buttons>
             </UserActionContainer>

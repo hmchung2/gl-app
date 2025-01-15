@@ -7,7 +7,8 @@ import {colors} from '../../colors.ts';
 import {useWindowDimensions} from 'react-native';
 import AvatarImg from '../../components/users/AvatarImg.tsx';
 import {ApolloCache, FetchResult, gql, useApolloClient} from '@apollo/client';
-import {useReadAlarmMutation} from '../../generated/graphql.ts';
+import {Scalars, useReadAlarmMutation} from '../../generated/graphql.ts';
+import {Maybe} from 'graphql/jsutils/Maybe';
 
 type greenLightAlarmProps = NativeStackScreenProps<
   RootStackParamList,
@@ -77,6 +78,10 @@ export default function GreenLightAlarm({
   const imageSize = screenWidth * 0.8; // 80% of the screen width
   const client = useApolloClient();
 
+  useEffect(() => {
+    console.log(alarm);
+  }, []);
+
   // const updateReadMessage = (
   //   cache: ApolloCache<any>,
   //   result: FetchResult<any>,
@@ -120,13 +125,24 @@ export default function GreenLightAlarm({
     }
   }, [alarm.alarm.read]);
 
+  const goToProfile = (id?: Maybe<Scalars['Int']['output']> | undefined) => {
+    if (!id) {
+      console.error('targetId is null or undefined');
+      return;
+    }
+    navigation.navigate('StackProfileNav', {
+      screen: 'SimpleProfile',
+      params: {id},
+    });
+  };
+
   return (
     <ScreenLayout loading={false}>
       <AvatarImg avatarPath={alarm.alarm.alarmImg} size={imageSize} />
       <ExplainText>Congrats!!!</ExplainText>
       <SubExplainText>{alarm.alarm.detail}</SubExplainText>
       <ButtonContainer>
-        <LeftStyledButton onPress={() => console.log('Button 1 pressed')}>
+        <LeftStyledButton onPress={() => goToProfile(alarm?.alarm?.targetId)}>
           <LeftButtonText>Go To Profile</LeftButtonText>
         </LeftStyledButton>
         <RightStyledButton onPress={() => console.log('Button 2 pressed')}>

@@ -1,17 +1,44 @@
-const CommonTextInput = styled.TextInput`
-  font-size: 15px;
-  margin-top: 2px;
-  border-width: 1px;
-  border-color: #ccc;
-  padding: 8px;
-`;
+1. 일단 프로파일 네비게이션 설정 (메시지 룸, 알람창)
 
-const [description, setDescription] = useState<string>(
-  editData?.me?.description || ''
-);
+2. 채팅룸 생성하고 들어가기 (프로파일 페이지에서)
 
-<CommonTextInput
-  value={description}
-  onChangeText={(text) => setDescription(text)}
-  placeholder="Enter description"
-/>
+3. 개인 프로필에서 matches -> 대기방으로 진입 (일단)
+
+4. 알람창에서 go back 하기
+
+
+
+나중에 할 일
+1. 대기방 실시간 연동
+
+2. 대기방 캐쉬 처리. 지금 계속 fetch 중
+
+3. 하트 탭 제거 및 홈탭 선택
+
+
+  const renderItem = ({item}: RenderItemProps) => {
+    console.log('item : ', item);
+    return (
+      <TouchableOpacity onPress={() => goToProfile(item.id)}>
+        <Column>
+          <AvatarImg
+            avatarPath={item.avatar ? item.avatar : undefined}
+            size={70}
+          />
+          <Data>
+            <Username>{item.username}</Username>
+          </Data>
+        </Column>
+      </TouchableOpacity>
+    );
+  };
+
+
+    const goToProfile = (id: number) => {
+      navigation.navigate('StackProfileNav', {
+        screen: 'SimpleProfile',
+        params: {
+          id: id,
+        },
+      });
+    };

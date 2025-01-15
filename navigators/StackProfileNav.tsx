@@ -9,7 +9,7 @@ import {RootStackParamList} from '../shared/shared.types.ts';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useEffect} from 'react';
 import Photo from '../screens/Photo.tsx';
-import EmptyScreen from '../screens/EmptyScreen.tsx';
+import React from 'react';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -40,6 +40,9 @@ const StackProfileNav = ({navigation, route}: StackProfileNavProps) => {
         name="SimpleProfile"
         component={SimpleProfile}
         initialParams={route.params}
+        options={{
+          headerTitle: '', // Initially empty
+        }}
       />
       <Stack.Screen
         name="StackFollowers"
